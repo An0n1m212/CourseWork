@@ -66,7 +66,7 @@ public partial class App : Application
 
     /// <summary>Маршрутизація за роллю: студент - кабінет студента, викладач і адмін - місце викладача.</summary>
     private void ShowWorkspace(User user)
-    {
+        {
         Window w = user.Role == Role.Student
             ? new StudentWindow(_services, ShowLogin)
             : new TeacherWindow(_services, ShowLogin);
