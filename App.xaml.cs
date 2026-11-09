@@ -17,6 +17,7 @@ public sealed record AppServices(
     IUserRepository Users,
     IGroupRepository Groups,
     ICategoryRepository Categories,
+    ITestRepository Tests,
     IAuthService Auth,
     ILocalizationService Localization,
     IThemeService Theme,
@@ -38,6 +39,7 @@ public partial class App : Application
         sc.AddSingleton<IUserRepository, InMemoryUserRepository>();
         sc.AddSingleton<IGroupRepository, InMemoryGroupRepository>();
         sc.AddSingleton<ICategoryRepository, InMemoryCategoryRepository>();
+        sc.AddSingleton<ITestRepository, InMemoryTestRepository>();
         sc.AddSingleton(new StorageInfo("In-Memory"));
 
         // ---------- сервіси та бізнес-логіка ----------
@@ -52,7 +54,8 @@ public partial class App : Application
         DemoDataSeeder.Seed(
             _provider.GetRequiredService<IUserRepository>(),
             _provider.GetRequiredService<IGroupRepository>(),
-            _provider.GetRequiredService<ICategoryRepository>());
+            _provider.GetRequiredService<ICategoryRepository>(),
+            _provider.GetRequiredService<ITestRepository>());
 
         _services = _provider.GetRequiredService<AppServices>();
 
@@ -66,7 +69,7 @@ public partial class App : Application
 
     /// <summary>Маршрутизація за роллю: студент - кабінет студента, викладач і адмін - місце викладача.</summary>
     private void ShowWorkspace(User user)
-        {
+    {
         Window w = user.Role == Role.Student
             ? new StudentWindow(_services, ShowLogin)
             : new TeacherWindow(_services, ShowLogin);

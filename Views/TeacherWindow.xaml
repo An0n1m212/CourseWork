@@ -7,7 +7,7 @@
     <DockPanel>
         <v:HeaderBar x:Name="Header" DockPanel.Dock="Top" />
         <TabControl x:Name="Tabs">
-            <TabItem x:Name="WelcomeTab" Header="{loc:T Win_Teacher}" />
+            <TabItem x:Name="TestsTab" Header="{loc:T Tab_Builder}" />
         </TabControl>
     </DockPanel>
 </Window>

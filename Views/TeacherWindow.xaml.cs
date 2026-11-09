@@ -15,11 +15,7 @@ public partial class TeacherWindow : Window
         if (!services.Auth.IsInRole(Role.Teacher, Role.Admin))
             throw new InvalidOperationException("Access denied: Teacher or Admin role required.");
 
-        WelcomeTab.Content = new System.Windows.Controls.TextBlock
-        {
-            Text = "v0.2: вхід, ролі та шапка працюють. Робочі вкладки зʼявляться у наступних версіях.",
-            Margin = new Thickness(24), FontSize = 16, TextWrapping = TextWrapping.Wrap
-        };
+        TestsTab.Content = new TestsManagementView(services);
 
         Header.Init(services);
         Header.LogoutRequested += (_, _) =>

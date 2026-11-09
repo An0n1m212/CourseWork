@@ -17,7 +17,7 @@ public partial class StudentWindow : Window
 
         WelcomeTab.Content = new System.Windows.Controls.TextBlock
         {
-            Text = "v0.2: вхід, ролі та шапка працюють. Робочі вкладки зʼявляться у наступних версіях.",
+            Text = "v0.3: вхід, ролі та шапка працюють. Робочі вкладки зʼявляться у наступних версіях.",
             Margin = new Thickness(24), FontSize = 16, TextWrapping = TextWrapping.Wrap
         };
 
