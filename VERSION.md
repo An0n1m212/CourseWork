@@ -1,5 +1,5 @@
-﻿# Testing System v0.1
+﻿# Testing System v0.2
 
-Контракт: усі моделі та інтерфейси. Вікно-заглушка показує кількість типів.
+Архітектура (DI), in-memory сховища, вхід/реєстрація, ролі, локалізація UA/RU/EN, теми, шапка з профілем.
 
 Збірка: `dotnet build TestingSystem.csproj` (потрібен .NET 10 SDK, Windows).
