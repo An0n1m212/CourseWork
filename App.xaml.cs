@@ -18,9 +18,14 @@ public sealed record AppServices(
     IGroupRepository Groups,
     ICategoryRepository Categories,
     ITestRepository Tests,
+    IResultRepository Results,
     IAuthService Auth,
     ILocalizationService Localization,
     IThemeService Theme,
+    GradingEngine Grading,
+    TestSessionService Sessions,
+    IReportExportService Export,
+    IInactivityMonitor Inactivity,
     StorageInfo Storage);
 
 public partial class App : Application
@@ -40,12 +45,17 @@ public partial class App : Application
         sc.AddSingleton<IGroupRepository, InMemoryGroupRepository>();
         sc.AddSingleton<ICategoryRepository, InMemoryCategoryRepository>();
         sc.AddSingleton<ITestRepository, InMemoryTestRepository>();
+        sc.AddSingleton<IResultRepository, InMemoryResultRepository>();
         sc.AddSingleton(new StorageInfo("In-Memory"));
 
         // ---------- сервіси та бізнес-логіка ----------
+        sc.AddSingleton<GradingEngine>();
         sc.AddSingleton<IAuthService, AuthService>();
         sc.AddSingleton<ILocalizationService, LocalizationService>();
         sc.AddSingleton<IThemeService, ThemeService>();
+        sc.AddSingleton<TestSessionService>();
+        sc.AddSingleton<IReportExportService, ReportExportService>();
+        sc.AddSingleton<IInactivityMonitor, NullInactivityMonitor>();   // заглушка до v0.7
 
         sc.AddSingleton<AppServices>();
 
@@ -55,7 +65,9 @@ public partial class App : Application
             _provider.GetRequiredService<IUserRepository>(),
             _provider.GetRequiredService<IGroupRepository>(),
             _provider.GetRequiredService<ICategoryRepository>(),
-            _provider.GetRequiredService<ITestRepository>());
+            _provider.GetRequiredService<ITestRepository>(),
+            _provider.GetRequiredService<IResultRepository>(),
+            _provider.GetRequiredService<GradingEngine>());
 
         _services = _provider.GetRequiredService<AppServices>();
 

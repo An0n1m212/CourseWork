@@ -15,11 +15,8 @@ public partial class StudentWindow : Window
         if (!services.Auth.IsInRole(Role.Student))
             throw new InvalidOperationException("Access denied: Student role required.");
 
-        WelcomeTab.Content = new System.Windows.Controls.TextBlock
-        {
-            Text = "v0.3: вхід, ролі та шапка працюють. Робочі вкладки зʼявляться у наступних версіях.",
-            Margin = new Thickness(24), FontSize = 16, TextWrapping = TextWrapping.Wrap
-        };
+        TestsTab.Content = new AvailableTestsView(services);
+        ResultsTab.Content = new MyResultsView(services);
 
         Header.Init(services);
         Header.LogoutRequested += (_, _) =>

@@ -11,7 +11,7 @@ namespace TestingSystem.Persistence;
 /// </summary>
 public static class DemoDataSeeder
 {
-    public static void Seed(IUserRepository users, IGroupRepository groups, ICategoryRepository categories, ITestRepository tests)
+    public static void Seed(IUserRepository users, IGroupRepository groups, ICategoryRepository categories, ITestRepository tests, IResultRepository results, GradingEngine grading)
     {
         // ---------- группы и категории ----------
         var kn = groups.Save(new Group { Name = "КН-25-1" });
@@ -88,6 +88,21 @@ public static class DemoDataSeeder
             }
         });
 
+        // ---------- результаты ----------
+        // 1) Работа ученика, ожидающая проверки (есть ручные вопросы) — для демонстрации экрана проверки
+        string? demoFile = CreateDemoUpload();
+        var q = full.Questions;
+        Submit(results, grading, s1, full, DateTime.Now.AddHours(-3),
+            Pick(q[0], 0), PickMany(q[1], 0, 2), Typed(q[2], "  MAIN "), Typed(q[3], "Я знаю паттерн Singleton"),
+            Typed(q[4], "Репозиторий скрывает детали хранения данных: UI и бизнес-логика работают с интерфейсом, а реализацию (память, SQLite) можно заменить."),
+            Matched(q[5], 0, 1, 1),            // третья пара выбрана неверно -> частичный балл 2 из 3
+            Ordered(q[6], 0, 1, 2, 3), UploadedFile(q[7], demoFile));
+
+        // 2) Проверенные попытки по тесту 2: динамика успеваемости и сертификаты
+        Submit(results, grading, s1, db, DateTime.Now.AddDays(-3), Pick(db.Questions[0], 0), Pick(db.Questions[1], 1), Pick(db.Questions[2], 2)); // 33%
+        Submit(results, grading, s1, db, DateTime.Now.AddDays(-1), Pick(db.Questions[0], 0), Pick(db.Questions[1], 0), Pick(db.Questions[2], 2)); // 67%
+        Submit(results, grading, s2, db, DateTime.Now.AddDays(-2), Pick(db.Questions[0], 0), Pick(db.Questions[1], 0), Pick(db.Questions[2], 0)); // 100%
+
     }
 
     // ----------------------- вспомогательные методы -----------------------
@@ -134,4 +149,49 @@ public static class DemoDataSeeder
     {
         CategoryId = cat, Text = text, QuestionType = QuestionType.FileUpload, MaxScore = max, Explanation = explanation
     };
+
+    private static void Submit(IResultRepository results, GradingEngine grading, User student, Test test, DateTime when,
+                               params StudentAnswerDetail[] given)
+    {
+        var session = results.SaveSession(new TestSession
+        {
+            StudentId = student.Id, TestId = test.Id, StartTime = when.AddMinutes(-7), EndTime = when,
+            CurrentQuestionIndex = test.Questions.Count - 1, Status = ResultStatus.Completed
+        });
+
+        var result = grading.BuildResult(session, test, given.ToDictionary(d => d.QuestionId), timedOut: false);
+        result.Date = when;
+
+        session.Status = result.Status;
+        results.SaveSession(session);
+        results.SaveResult(result);
+    }
+
+    private static string? CreateDemoUpload()
+    {
+        try
+        {
+            string dir = Path.Combine(AppFiles.Root, "uploads");
+            Directory.CreateDirectory(dir);
+            string path = Path.Combine(dir, "demo_lab_solution.txt");
+            File.WriteAllText(path, "Демо-файл ученика: решение лабораторной работы.\nЗдесь мог бы быть ваш код.");
+            return path;
+        }
+        catch { return null; }
+    }
+
+    // --- ответы ученика ---
+    private static StudentAnswerDetail Pick(Question q, int index) => new() { QuestionId = q.Id, SelectedAnswerIds = { q.Answers[index].Id } };
+    private static StudentAnswerDetail PickMany(Question q, params int[] indexes) => new() { QuestionId = q.Id, SelectedAnswerIds = indexes.Select(i => q.Answers[i].Id).ToList() };
+    private static StudentAnswerDetail Typed(Question q, string text) => new() { QuestionId = q.Id, GivenTextAnswer = text };
+    private static StudentAnswerDetail UploadedFile(Question q, string? path) => new() { QuestionId = q.Id, UploadedFilePath = path };
+
+    /// <summary>Sequence: индексы вариантов в порядке, расставленном учеником.</summary>
+    private static StudentAnswerDetail Ordered(Question q, params int[] indexes)
+        => new() { QuestionId = q.Id, SelectedAnswerIds = indexes.Select(i => q.Answers[i].Id).ToList() };
+
+    /// <summary>Matching: для каждой левой строки — индекс варианта, чья правая часть выбрана.</summary>
+    private static StudentAnswerDetail Matched(Question q, params int[] rightOwnerIndexes)
+        => new() { QuestionId = q.Id, SelectedAnswerIds = rightOwnerIndexes.Select(i => q.Answers[i].Id).ToList() };
+
 }
