@@ -9,6 +9,7 @@
         <TabControl x:Name="Tabs">
             <TabItem x:Name="TestsTab" Header="{loc:T Tab_Available}" />
             <TabItem x:Name="ResultsTab" Header="{loc:T Tab_MyResults}" />
+            <TabItem x:Name="ProfileTab" Header="{loc:T Tab_Profile}" />
         </TabControl>
     </DockPanel>
 </Window>
