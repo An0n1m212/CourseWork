@@ -17,8 +17,10 @@ public partial class StudentWindow : Window
 
         TestsTab.Content = new AvailableTestsView(services);
         ResultsTab.Content = new MyResultsView(services);
+        ProfileTab.Content = new ProfileView(services);
 
         Header.Init(services);
+        Header.ProfileRequested += (_, _) => Tabs.SelectedItem = ProfileTab;
         Header.LogoutRequested += (_, _) =>
         {
             _services.Auth.Logout();

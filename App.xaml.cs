@@ -5,6 +5,7 @@ using TestingSystem.Infrastructure;
 using TestingSystem.Models;
 using TestingSystem.Persistence;
 using TestingSystem.Services;
+using TestingSystem.Services.Ai;
 using TestingSystem.Views;
 
 namespace TestingSystem;
@@ -24,8 +25,10 @@ public sealed record AppServices(
     IThemeService Theme,
     GradingEngine Grading,
     TestSessionService Sessions,
+    StatisticsService Stats,
     IReportExportService Export,
     IInactivityMonitor Inactivity,
+    IAiAssistant AiAssistant,
     StorageInfo Storage);
 
 public partial class App : Application
@@ -54,7 +57,9 @@ public partial class App : Application
         sc.AddSingleton<ILocalizationService, LocalizationService>();
         sc.AddSingleton<IThemeService, ThemeService>();
         sc.AddSingleton<TestSessionService>();
+        sc.AddSingleton<StatisticsService>();
         sc.AddSingleton<IReportExportService, ReportExportService>();
+        sc.AddSingleton<IAiAssistant, DisabledAiAssistant>();   // заглушка до v0.8
         sc.AddSingleton<IInactivityMonitor, NullInactivityMonitor>();   // заглушка до v0.7
 
         sc.AddSingleton<AppServices>();
