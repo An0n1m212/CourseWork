@@ -6,6 +6,7 @@ using TestingSystem.Models;
 using TestingSystem.Persistence;
 using TestingSystem.Services;
 using TestingSystem.Services.Ai;
+using TestingSystem.ViewModels;
 using TestingSystem.Views;
 
 namespace TestingSystem;
@@ -29,6 +30,7 @@ public sealed record AppServices(
     IReportExportService Export,
     IInactivityMonitor Inactivity,
     IAiAssistant AiAssistant,
+    IViewModelFactory ViewModels,
     StorageInfo Storage);
 
 public partial class App : Application
@@ -48,6 +50,7 @@ public partial class App : Application
         sc.AddSingleton<IGroupRepository, InMemoryGroupRepository>();
         sc.AddSingleton<ICategoryRepository, InMemoryCategoryRepository>();
         sc.AddSingleton<ITestRepository, InMemoryTestRepository>();
+        sc.AddSingleton<ILectureRepository, InMemoryLectureRepository>();
         sc.AddSingleton<IResultRepository, InMemoryResultRepository>();
         sc.AddSingleton(new StorageInfo("In-Memory"));
 
@@ -59,7 +62,13 @@ public partial class App : Application
         sc.AddSingleton<TestSessionService>();
         sc.AddSingleton<StatisticsService>();
         sc.AddSingleton<IReportExportService, ReportExportService>();
+        sc.AddSingleton<ILectureService, LectureService>();
         sc.AddSingleton<IAiAssistant, DisabledAiAssistant>();   // заглушка до v0.8
+
+        // ---------- MVVM-інфраструктура ----------
+        sc.AddSingleton<IDialogService>(_ => new WpfDialogService()
+            .Register<LectureEditorViewModel, LectureEditorWindow>());
+        sc.AddSingleton<IViewModelFactory, ViewModelFactory>();
         sc.AddSingleton<IInactivityMonitor, NullInactivityMonitor>();   // заглушка до v0.7
 
         sc.AddSingleton<AppServices>();
@@ -72,6 +81,7 @@ public partial class App : Application
             _provider.GetRequiredService<ICategoryRepository>(),
             _provider.GetRequiredService<ITestRepository>(),
             _provider.GetRequiredService<IResultRepository>(),
+            _provider.GetRequiredService<ILectureRepository>(),
             _provider.GetRequiredService<GradingEngine>());
 
         _services = _provider.GetRequiredService<AppServices>();

@@ -1,4 +1,4 @@
-﻿<Window x:Class="TestingSystem.Views.StudentWindow"
+<Window x:Class="TestingSystem.Views.StudentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:TestingSystem.Views"
@@ -8,6 +8,7 @@
         <v:HeaderBar x:Name="Header" DockPanel.Dock="Top" />
         <TabControl x:Name="Tabs">
             <TabItem x:Name="TestsTab" Header="{loc:T Tab_Available}" />
+            <TabItem x:Name="LecturesTab" Header="{loc:T Tab_Lectures}" />
             <TabItem x:Name="ResultsTab" Header="{loc:T Tab_MyResults}" />
             <TabItem x:Name="ProfileTab" Header="{loc:T Tab_Profile}" />
         </TabControl>

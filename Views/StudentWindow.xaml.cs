@@ -1,5 +1,6 @@
-﻿using System.Windows;
+using System.Windows;
 using TestingSystem.Models;
+using TestingSystem.ViewModels;
 
 namespace TestingSystem.Views;
 
@@ -16,6 +17,7 @@ public partial class StudentWindow : Window
             throw new InvalidOperationException("Access denied: Student role required.");
 
         TestsTab.Content = new AvailableTestsView(services);
+        LecturesTab.Content = new StudentLecturesView(services.ViewModels.Create<StudentLecturesViewModel>());
         ResultsTab.Content = new MyResultsView(services);
         ProfileTab.Content = new ProfileView(services);
 

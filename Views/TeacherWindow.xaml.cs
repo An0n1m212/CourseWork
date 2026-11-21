@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using TestingSystem.Models;
+using TestingSystem.ViewModels;
 
 namespace TestingSystem.Views;
 
@@ -16,8 +17,13 @@ public partial class TeacherWindow : Window
             throw new InvalidOperationException("Access denied: Teacher or Admin role required.");
 
         TestsTab.Content = new TestsManagementView(services);
+        LecturesTab.Content = new LecturesView(services.ViewModels.Create<LecturesViewModel>());
         ReviewTab.Content = new ReviewView(services);
         AnalyticsTab.Content = new AnalyticsView(services);
+        if (services.Auth.IsInRole(Role.Admin))
+            GroupsTab.Content = new GroupsView(services);
+        else
+            GroupsTab.Visibility = Visibility.Collapsed;
         ProfileTab.Content = new ProfileView(services);
 
         Header.Init(services);
