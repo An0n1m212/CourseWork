@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using TestingSystem.Abstractions;
 using TestingSystem.Models;
 using TestingSystem.Services;
@@ -11,7 +11,8 @@ namespace TestingSystem.Persistence;
 /// </summary>
 public static class DemoDataSeeder
 {
-    public static void Seed(IUserRepository users, IGroupRepository groups, ICategoryRepository categories, ITestRepository tests, IResultRepository results, GradingEngine grading)
+    public static void Seed(IUserRepository users, IGroupRepository groups, ICategoryRepository categories,
+                            ITestRepository tests, IResultRepository results, ILectureRepository lectures, GradingEngine grading)
     {
         // ---------- группы и категории ----------
         var kn = groups.Save(new Group { Name = "КН-25-1" });
@@ -103,7 +104,91 @@ public static class DemoDataSeeder
         Submit(results, grading, s1, db, DateTime.Now.AddDays(-1), Pick(db.Questions[0], 0), Pick(db.Questions[1], 0), Pick(db.Questions[2], 2)); // 67%
         Submit(results, grading, s2, db, DateTime.Now.AddDays(-2), Pick(db.Questions[0], 0), Pick(db.Questions[1], 0), Pick(db.Questions[2], 0)); // 100%
 
+        // ---------- лекції ----------
+        // 1) для групи КН-25-1, пов'язана з комплексним тестом
+        lectures.Save(new Lecture
+        {
+            Title = "Паттерн «Репозиторий»", Summary = "Как отделить доступ к данным от бизнес-логики и интерфейса.",
+            Content = RepositoryLecture, AuthorTeacherId = teacher.Id, CategoryId = catProg.Id,
+            AssignedGroupIds = { kn.Id }, IsPublished = true, RelatedTestId = full.Id,
+            CreatedAt = DateTime.Now.AddDays(-10), UpdatedAt = DateTime.Now.AddDays(-2)
+        });
+
+        // 2) для всех групп
+        lectures.Save(new Lecture
+        {
+            Title = "Основы SQL: SELECT и JOIN", Summary = "Выборка данных и объединение таблиц.",
+            Content = SqlLecture, AuthorTeacherId = teacher.Id, CategoryId = catDb.Id,
+            IsPublished = true, RelatedTestId = db.Id,
+            CreatedAt = DateTime.Now.AddDays(-6), UpdatedAt = DateTime.Now.AddDays(-1)
+        });
+
+        // 3) черновик: студентам не виден
+        lectures.Save(new Lecture
+        {
+            Title = "Черновик: Dependency Injection", Summary = "Заготовка лекции — ещё не опубликована.",
+            Content = "# Dependency Injection\n\nЗаготовка лекции. Опубликуйте её, когда текст будет готов.",
+            AuthorTeacherId = teacher.Id, CategoryId = catProg.Id, IsPublished = false,
+            CreatedAt = DateTime.Now.AddHours(-5), UpdatedAt = DateTime.Now.AddHours(-5)
+        });
     }
+
+
+    private const string RepositoryLecture = """
+        # Паттерн «Репозиторий»
+
+        ## Зачем он нужен
+        Репозиторий **скрывает способ хранения данных** за интерфейсом. Интерфейс и бизнес-логика работают с абстракцией,
+        а где лежат данные — в памяти, SQLite или PostgreSQL — решает конкретная реализация.
+
+        ## Основные идеи
+        - Интерфейс описывает операции: получить, сохранить, удалить.
+        - Реализация знает про хранилище: список в памяти, SQL-запросы, EF Core.
+        - Подмена хранилища не требует переписывать интерфейс.
+
+        ## Пример
+        ```
+        interface ITestRepository
+        {
+            Test? GetById(int id);
+            Test Save(Test test);
+            void Delete(int id);
+        }
+        ```
+
+        ## Итоги
+        1. Репозиторий отделяет доступ к данным от логики.
+        2. Вместе с Dependency Injection даёт простую замену хранилища.
+
+        ## Вопросы для самопроверки
+        1. Какую проблему решает репозиторий?
+        2. Чем InMemory-реализация отличается от SQL-реализации для вызывающего кода?
+        """;
+
+    private const string SqlLecture = """
+        # Основы SQL: SELECT и JOIN
+
+        ## SELECT
+        Команда **SELECT** выбирает строки из таблицы:
+
+        ```
+        SELECT Name, Age FROM Students WHERE Age > 18;
+        ```
+
+        ## JOIN
+        **JOIN** объединяет строки двух таблиц по условию:
+
+        ```
+        SELECT s.Name, g.Title
+        FROM Students s
+        JOIN Groups g ON g.Id = s.GroupId;
+        ```
+
+        ## Запомните
+        - `INNER JOIN` возвращает только совпавшие строки.
+        - `LEFT JOIN` сохраняет все строки левой таблицы.
+        - Условие объединения задаётся после `ON`.
+        """;
 
     // ----------------------- вспомогательные методы -----------------------
 
@@ -111,43 +196,6 @@ public static class DemoDataSeeder
     {
         Username = login, FullName = fullName, Email = email, GroupId = groupId, Role = role,
         PasswordHash = PasswordHasher.Hash("1234"), RegistrationDate = DateTime.Now.AddDays(-daysAgo)
-    };
-
-
-    // --- конструкторы вопросов ---
-    private static Question Single(int cat, string text, double max, string explanation, params (string Text, bool Correct)[] answers) => new()
-    {
-        CategoryId = cat, Text = text, QuestionType = QuestionType.SingleChoice, MaxScore = max, Explanation = explanation,
-        Answers = answers.Select((a, i) => new Answer { Text = a.Text, IsCorrect = a.Correct, OrderIndex = i }).ToList()
-    };
-
-    private static Question Multiple(int cat, string text, double max, string explanation, params (string Text, bool Correct)[] answers) => new()
-    {
-        CategoryId = cat, Text = text, QuestionType = QuestionType.MultipleChoice, MaxScore = max, Explanation = explanation,
-        Answers = answers.Select((a, i) => new Answer { Text = a.Text, IsCorrect = a.Correct, OrderIndex = i }).ToList()
-    };
-
-    private static Question TextQ(int cat, string text, double max, TextEvaluationType eval, string explanation, params string[] accepted) => new()
-    {
-        CategoryId = cat, Text = text, QuestionType = QuestionType.TextAnswer, TextEvaluationType = eval, MaxScore = max, Explanation = explanation,
-        Answers = accepted.Select((a, i) => new Answer { Text = a, IsCorrect = true, OrderIndex = i }).ToList()
-    };
-
-    private static Question Matching(int cat, string text, double max, string explanation, params (string Left, string Right)[] pairs) => new()
-    {
-        CategoryId = cat, Text = text, QuestionType = QuestionType.Matching, MaxScore = max, Explanation = explanation,
-        Answers = pairs.Select((p, i) => new Answer { Text = p.Left, CorrectPairText = p.Right, OrderIndex = i }).ToList()
-    };
-
-    private static Question Sequence(int cat, string text, double max, string explanation, params string[] itemsInCorrectOrder) => new()
-    {
-        CategoryId = cat, Text = text, QuestionType = QuestionType.Sequence, MaxScore = max, Explanation = explanation,
-        Answers = itemsInCorrectOrder.Select((t, i) => new Answer { Text = t, OrderIndex = i }).ToList()
-    };
-
-    private static Question FileQ(int cat, string text, double max, string explanation) => new()
-    {
-        CategoryId = cat, Text = text, QuestionType = QuestionType.FileUpload, MaxScore = max, Explanation = explanation
     };
 
     private static void Submit(IResultRepository results, GradingEngine grading, User student, Test test, DateTime when,
@@ -194,4 +242,39 @@ public static class DemoDataSeeder
     private static StudentAnswerDetail Matched(Question q, params int[] rightOwnerIndexes)
         => new() { QuestionId = q.Id, SelectedAnswerIds = rightOwnerIndexes.Select(i => q.Answers[i].Id).ToList() };
 
+    // --- конструкторы вопросов ---
+    private static Question Single(int cat, string text, double max, string explanation, params (string Text, bool Correct)[] answers) => new()
+    {
+        CategoryId = cat, Text = text, QuestionType = QuestionType.SingleChoice, MaxScore = max, Explanation = explanation,
+        Answers = answers.Select((a, i) => new Answer { Text = a.Text, IsCorrect = a.Correct, OrderIndex = i }).ToList()
+    };
+
+    private static Question Multiple(int cat, string text, double max, string explanation, params (string Text, bool Correct)[] answers) => new()
+    {
+        CategoryId = cat, Text = text, QuestionType = QuestionType.MultipleChoice, MaxScore = max, Explanation = explanation,
+        Answers = answers.Select((a, i) => new Answer { Text = a.Text, IsCorrect = a.Correct, OrderIndex = i }).ToList()
+    };
+
+    private static Question TextQ(int cat, string text, double max, TextEvaluationType eval, string explanation, params string[] accepted) => new()
+    {
+        CategoryId = cat, Text = text, QuestionType = QuestionType.TextAnswer, TextEvaluationType = eval, MaxScore = max, Explanation = explanation,
+        Answers = accepted.Select((a, i) => new Answer { Text = a, IsCorrect = true, OrderIndex = i }).ToList()
+    };
+
+    private static Question Matching(int cat, string text, double max, string explanation, params (string Left, string Right)[] pairs) => new()
+    {
+        CategoryId = cat, Text = text, QuestionType = QuestionType.Matching, MaxScore = max, Explanation = explanation,
+        Answers = pairs.Select((p, i) => new Answer { Text = p.Left, CorrectPairText = p.Right, OrderIndex = i }).ToList()
+    };
+
+    private static Question Sequence(int cat, string text, double max, string explanation, params string[] itemsInCorrectOrder) => new()
+    {
+        CategoryId = cat, Text = text, QuestionType = QuestionType.Sequence, MaxScore = max, Explanation = explanation,
+        Answers = itemsInCorrectOrder.Select((t, i) => new Answer { Text = t, OrderIndex = i }).ToList()
+    };
+
+    private static Question FileQ(int cat, string text, double max, string explanation) => new()
+    {
+        CategoryId = cat, Text = text, QuestionType = QuestionType.FileUpload, MaxScore = max, Explanation = explanation
+    };
 }

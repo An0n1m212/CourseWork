@@ -8,8 +8,10 @@
         <v:HeaderBar x:Name="Header" DockPanel.Dock="Top" />
         <TabControl x:Name="Tabs">
             <TabItem x:Name="TestsTab" Header="{loc:T Tab_Builder}" />
+            <TabItem x:Name="LecturesTab" Header="{loc:T Tab_Lectures}" />
             <TabItem x:Name="ReviewTab" Header="{loc:T Tab_Review}" />
             <TabItem x:Name="AnalyticsTab" Header="{loc:T Tab_Analytics}" />
+            <TabItem x:Name="GroupsTab" Header="{loc:T Tab_Groups}" />
             <TabItem x:Name="ProfileTab" Header="{loc:T Tab_Profile}" />
         </TabControl>
     </DockPanel>
