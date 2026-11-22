@@ -7,7 +7,7 @@
             BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="12,8">
         <DockPanel>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                <!-- Индикатор подключения к хранилищу данных -->
+                <!-- Індикатор підключення до сховища даних -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
                     <Ellipse Width="10" Height="10" Fill="{DynamicResource SuccessBrush}" VerticalAlignment="Center" />
                     <TextBlock x:Name="ConnectionText" Margin="6,0,0,0" FontSize="12"
@@ -17,7 +17,7 @@
                 <Button Content="{loc:T Btn_Logout}" Margin="12,0,0,0" Padding="12,5" Click="Logout_Click" />
             </StackPanel>
 
-            <!-- Клик по имени/аватару открывает «Личный кабинет» -->
+            <!-- Клік по імені/аватару відкриває «Особистий кабінет» -->
             <Button HorizontalAlignment="Left" Background="Transparent" BorderThickness="0" Padding="4"
                     Cursor="Hand" ToolTip="{loc:T Hdr_OpenProfile}" Click="Profile_Click">
                 <StackPanel Orientation="Horizontal">

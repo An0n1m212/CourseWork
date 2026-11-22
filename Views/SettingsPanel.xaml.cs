@@ -5,8 +5,8 @@ using TestingSystem.Abstractions;
 namespace TestingSystem.Views;
 
 /// <summary>
-/// Переключатели языка (UA/RU/EN) и темы (Light/Dark). Используется и в шапке, и в профиле:
-/// оба экземпляра синхронизируются через события сервисов.
+/// Перемикачі мови (UA/RU/EN) і теми (Light/Dark). Використовується і в шапці, і в профілі:
+/// обидва екземпляри синхронізуються через події сервісів.
 /// </summary>
 public partial class SettingsPanel : UserControl
 {

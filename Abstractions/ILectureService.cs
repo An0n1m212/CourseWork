@@ -13,7 +13,7 @@ public interface ILectureService
 
     Lecture? GetById(int id);
 
-    /// <summary>Бросає UnauthorizedAccessException, якщо у користувача немає прав.</summary>
+    /// <summary>Кидає UnauthorizedAccessException, якщо в користувача немає прав.</summary>
     Lecture Save(Lecture lecture);
     void Delete(int id);
 }

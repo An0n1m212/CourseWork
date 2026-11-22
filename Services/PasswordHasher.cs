@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 
 namespace TestingSystem.Services;
 
-/// <summary>PBKDF2-SHA256 с уникальной солью. Формат: "итерации.соль.хэш" (Base64).</summary>
+/// <summary>PBKDF2-SHA256 з унікальною сіллю. Формат: "ітерації.сіль.хеш" (Base64).</summary>
 public static class PasswordHasher
 {
     private const int Iterations = 100_000, SaltSize = 16, KeySize = 32;

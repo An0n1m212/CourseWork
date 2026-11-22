@@ -31,7 +31,7 @@
                 <TextBlock Text="{loc:T Field_Email}" />
                 <TextBox x:Name="EmailBox" Padding="4" Margin="0,2,0,10" />
                 <TextBlock Text="{loc:T Field_Group}" />
-                <ComboBox x:Name="GroupCombo" DisplayMemberPath="Name" Padding="4" Margin="0,2,0,10" />
+                <ComboBox x:Name="GroupCombo" DisplayMemberPath="Name" Padding="4" Margin="0,2,0,10" loc:ComboBoxSearch.Enabled="True" />
             </StackPanel>
 
             <TextBlock x:Name="ErrorText" Foreground="{DynamicResource ErrorBrush}" TextWrapping="Wrap" Margin="0,0,0,8" />

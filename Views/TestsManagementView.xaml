@@ -10,6 +10,20 @@
             <Button Content="{loc:T Btn_Delete}" Padding="12,5" Click="Delete_Click" />
         </StackPanel>
 
+        <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+            <TextBlock Text="{loc:T Lbl_Search}" VerticalAlignment="Center" Margin="0,0,6,0" />
+            <TextBox x:Name="SearchBox" Width="240" Padding="4" Margin="0,0,14,0" TextChanged="Search_TextChanged" />
+
+            <TextBlock Text="{loc:T Lbl_Category}" VerticalAlignment="Center" Margin="0,0,6,0" />
+            <ComboBox x:Name="CategoryFilter" Width="190" DisplayMemberPath="Name" Padding="4" Margin="0,0,14,0"
+                      loc:ComboBoxSearch.Enabled="True" SelectionChanged="Filter_SelectionChanged" />
+
+            <Button Content="{loc:T Btn_ResetFilters}" Padding="10,4" Click="ResetFilters_Click" />
+        </WrapPanel>
+
+        <TextBlock x:Name="EmptyText" DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,0,0,8"
+                   Foreground="{DynamicResource SecondaryTextBrush}" Visibility="Collapsed" />
+
         <ListBox x:Name="TestsList" HorizontalContentAlignment="Stretch"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="TestsList_DoubleClick">
             <ListBox.ItemTemplate>

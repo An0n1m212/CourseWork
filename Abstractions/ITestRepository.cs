@@ -6,7 +6,7 @@ public interface ITestRepository
 {
     IReadOnlyList<Test> GetAll();
     Test? GetById(int id);
-    /// <summary>Создаёт (Id == 0) или обновляет тест с вопросами и ответами; присваивает Id и внешние ключи.</summary>
+    /// <summary>Створює (Id == 0) або оновлює тест з питаннями та відповідями; присвоює Id і зовнішні ключі.</summary>
     Test Save(Test test);
     void Delete(int id);
 }

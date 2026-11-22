@@ -6,9 +6,9 @@ namespace TestingSystem.Services;
 public enum StartError { None, NotAssigned, NoAttemptsLeft, WrongAccessCode, NoQuestions, TestNotFound }
 
 /// <summary>
-/// Бизнес-логика запуска и проверки тестов: доступ по группам, лимит попыток, пин-код,
-/// подготовка вопросов (перемешивание) и завершение ручной проверки.
-/// Фабрика TestSessionController — UI не создаёт сессии сам.
+/// Бізнес-логіка запуску та перевірки тестів: доступ за групами, ліміт спроб, пін-код,
+/// підготовка питань (перемішування) і завершення ручної перевірки.
+/// Фабрика TestSessionController — UI не створює сесії сам.
 /// </summary>
 public class TestSessionService
 {
@@ -46,7 +46,7 @@ public class TestSessionService
         if (!string.IsNullOrWhiteSpace(test.AccessCode) && test.AccessCode.Trim() != (accessCode ?? string.Empty).Trim())
             return (StartError.WrongAccessCode, null);
 
-        // Незавершённые «брошенные» попытки закрываем как Expired (они уже учтены в лимите попыток)
+        // Незавершені «закинуті» спроби закриваємо як Expired (вони вже враховані в ліміті спроб)
         foreach (var old in _results.GetSessions(student.Id, test.Id).Where(s => s.Status == ResultStatus.InProgress))
         {
             old.Status = ResultStatus.Expired;
@@ -62,7 +62,7 @@ public class TestSessionService
         return (StartError.None, new TestSessionController(session, test, Prepare(test), _results, _grading));
     }
 
-    /// <summary>Порядок вопросов и вариантов: перемешивание по флагам теста; Sequence перемешивается всегда.</summary>
+    /// <summary>Порядок питань і варіантів: перемішування за прапорцями тесту; Sequence перемішується завжди.</summary>
     private List<RuntimeQuestion> Prepare(Test test)
     {
         var questions = test.IsRandomizeQuestions ? Shuffle(test.Questions) : test.Questions.ToList();
@@ -72,7 +72,7 @@ public class TestSessionService
             IReadOnlyList<Answer> answers = q.QuestionType switch
             {
                 QuestionType.Sequence => ShuffleDifferent(q.Answers),
-                QuestionType.Matching => q.Answers.OrderBy(a => a.OrderIndex).ToList(),   // слева — в заданном порядке
+                QuestionType.Matching => q.Answers.OrderBy(a => a.OrderIndex).ToList(),   // зліва — у заданому порядку
                 QuestionType.SingleChoice or QuestionType.MultipleChoice when test.IsRandomizeAnswers => Shuffle(q.Answers),
                 _ => q.Answers.OrderBy(a => a.OrderIndex).ToList()
             };
@@ -91,7 +91,7 @@ public class TestSessionService
         return list;
     }
 
-    /// <summary>Перемешивает так, чтобы исходный (правильный) порядок не совпал с показанным.</summary>
+    /// <summary>Перемішує так, щоб початковий (правильний) порядок не збігся з показаним.</summary>
     private List<Answer> ShuffleDifferent(List<Answer> answers)
     {
         var correct = answers.OrderBy(a => a.OrderIndex).Select(a => a.Id).ToList();
@@ -102,8 +102,8 @@ public class TestSessionService
     }
 
     /// <summary>
-    /// Завершение ручной проверки: баллы уже выставлены в Details (GradingEngine.ApplyManualScore).
-    /// Результат PendingTeacherReview -> Completed; связанная сессия тоже закрывается.
+    /// Завершення ручної перевірки: бали вже виставлено в Details (GradingEngine.ApplyManualScore).
+    /// Результат PendingTeacherReview -> Completed; пов'язана сесія теж закривається.
     /// </summary>
     public void CompleteReview(Result result, int teacherId, string? comment)
     {

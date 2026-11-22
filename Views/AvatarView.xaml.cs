@@ -5,8 +5,8 @@ using TestingSystem.Services;
 namespace TestingSystem.Views;
 
 /// <summary>
-/// Круглый аватар. Если файла нет — аватар по умолчанию: цветной круг с инициалами
-/// (цвет зависит от Id пользователя).
+/// Круглий аватар. Якщо файлу немає — аватар за замовчуванням: кольорове коло з ініціалами
+/// (колір залежить від Id користувача).
 /// </summary>
 public partial class AvatarView : UserControl
 {

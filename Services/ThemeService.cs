@@ -5,10 +5,10 @@ using TestingSystem.Abstractions;
 namespace TestingSystem.Services;
 
 /// <summary>
-/// Светлая/тёмная тема. Два слоя:
-///  1) Application.ThemeMode (встроенная Fluent-тема WPF, .NET 9+) перекрашивает стандартные контролы;
-///  2) словарь Themes/{Light|Dark}Colors.xaml даёт приложению свои кисти (карточки, вторичный текст, ошибки...).
-/// Экраны используют эти кисти через DynamicResource, поэтому переключение действует сразу.
+/// Світла/темна тема. Два шари:
+///  1) Application.ThemeMode (вбудована Fluent-тема WPF, .NET 9+) перефарбовує стандартні контроли;
+///  2) словник Themes/{Light|Dark}Colors.xaml дає застосунку власні пензлі (картки, вторинний текст, помилки...).
+/// Екрани використовують ці пензлі через DynamicResource, тому перемикання діє одразу.
 /// </summary>
 public class ThemeService : IThemeService
 {
@@ -31,7 +31,7 @@ public class ThemeService : IThemeService
 
         var mode = theme == AppTheme.Dark ? ThemeMode.Dark : ThemeMode.Light;
         app.ThemeMode = mode;
-        foreach (Window w in app.Windows) w.ThemeMode = mode;   // заголовок окна и уже открытые окна
+        foreach (Window w in app.Windows) w.ThemeMode = mode;   // заголовок вікна та вже відкриті вікна
 
         FixListBoxItemStyle(app);
 
@@ -40,14 +40,14 @@ public class ThemeService : IThemeService
     }
 
     /// <summary>
-    /// Стиль ListBoxItem из Fluent-темы привязывает HorizontalContentAlignment/VerticalContentAlignment к родительскому
-    /// ItemsControl; при замене содержимого списка это даёт безвредные сообщения «Не удаётся найти источник: RelativeSource
-    /// FindAncestor» в окне «Ошибки привязки XAML». Явно заданные значения заменяют привязку, а остальное оформление
-    /// берётся из темы (BasedOn). Если стиль темы не найден — ничего не меняем.
+    /// Стиль ListBoxItem з Fluent-теми прив'язує HorizontalContentAlignment/VerticalContentAlignment до батьківського
+    /// ItemsControl; при заміні вмісту списку це дає нешкідливі повідомлення «Не вдається знайти джерело: RelativeSource
+    /// FindAncestor» у вікні «Помилки прив'язки XAML». Явно задані значення замінюють прив'язку, а решта оформлення
+    /// береться з теми (BasedOn). Якщо стиль теми не знайдено — нічого не змінюємо.
     /// </summary>
     private static void FixListBoxItemStyle(Application app)
     {
-        app.Resources.Remove(typeof(ListBoxItem));                       // убираем свой прошлый стиль (иначе цепочка BasedOn растёт)
+        app.Resources.Remove(typeof(ListBoxItem));                       // прибираємо свій минулий стиль (інакше ланцюжок BasedOn зростає)
         if (app.TryFindResource(typeof(ListBoxItem)) is not Style themeStyle) return;
 
         var style = new Style(typeof(ListBoxItem), themeStyle);

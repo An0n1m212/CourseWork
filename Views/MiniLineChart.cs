@@ -7,8 +7,8 @@ using TestingSystem.Services;
 namespace TestingSystem.Views;
 
 /// <summary>
-/// Простой линейный график динамики успеваемости (0–100%). Рисуется на Canvas;
-/// цвета подключены через SetResourceReference, поэтому следуют текущей теме без перерисовки.
+/// Простий лінійний графік динаміки успішності (0–100%). Малюється на Canvas;
+/// кольори підключені через SetResourceReference, тому слідують поточній темі без перемальовування.
 /// </summary>
 public class MiniLineChart : Canvas
 {
@@ -40,7 +40,7 @@ public class MiniLineChart : Canvas
         const double left = 34, bottom = 20, top = 8, right = 10;
         double plotW = w - left - right, plotH = h - top - bottom;
 
-        // горизонтальные линии 0 / 50 / 100 %
+        // горизонтальні лінії 0 / 50 / 100 %
         foreach (int pct in new[] { 0, 50, 100 })
         {
             double y = top + plotH * (1 - pct / 100.0);

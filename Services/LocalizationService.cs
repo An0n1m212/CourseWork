@@ -4,9 +4,9 @@ using TestingSystem.Abstractions;
 namespace TestingSystem.Services;
 
 /// <summary>
-/// Локализация на основе таблицы строк (см. Strings.cs). При смене языка поднимает
-/// PropertyChanged("Item[]") — все привязки вида {loc:T Key} обновляются мгновенно.
-/// Источник строк легко заменить на .resx/JSON, не меняя интерфейс.
+/// Локалізація на основі таблиці рядків (див. Strings.cs). При зміні мови піднімає
+/// PropertyChanged("Item[]") — усі прив'язки виду {loc:T Key} оновлюються миттєво.
+/// Джерело рядків легко замінити на .resx/JSON, не змінюючи інтерфейс.
 /// </summary>
 public class LocalizationService : ILocalizationService
 {
@@ -19,7 +19,7 @@ public class LocalizationService : ILocalizationService
     {
         get
         {
-            if (!Strings.Table.TryGetValue(key, out var t)) return $"[{key}]";   // видно, что ключа нет
+            if (!Strings.Table.TryGetValue(key, out var t)) return $"[{key}]";   // видно, що ключа немає
             return CurrentLanguage switch { AppLanguage.UA => t.Ua, AppLanguage.RU => t.Ru, _ => t.En };
         }
     }
@@ -30,14 +30,14 @@ public class LocalizationService : ILocalizationService
     {
         if (language == CurrentLanguage) return;
         CurrentLanguage = language;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));   // обновить все {loc:T ...}
-        LanguageChanged?.Invoke(this, EventArgs.Empty);                          // обновить тексты, собранные в коде
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));   // оновити всі {loc:T ...}
+        LanguageChanged?.Invoke(this, EventArgs.Empty);                          // оновити тексти, зібрані в коді
     }
 }
 
 public static class LocalizationExtensions
 {
-    /// <summary>Локализованное описание результата операции: ключ = "Err_" + имя значения AuthResult.</summary>
+    /// <summary>Локалізований опис результату операції: ключ = "Err_" + ім'я значення AuthResult.</summary>
     public static string Describe(this ILocalizationService loc, AuthResult result)
         => loc.Format($"Err_{result}", AuthService.MinPasswordLength);
 }

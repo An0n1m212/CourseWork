@@ -2,7 +2,7 @@ using System.Windows.Input;
 
 namespace TestingSystem.Infrastructure.Mvvm;
 
-/// <summary>ICommand для привязки кнопок к методам ViewModel (Command="{Binding ...}").</summary>
+/// <summary>ICommand для прив'язки кнопок до методів ViewModel (Command="{Binding ...}").</summary>
 public sealed class RelayCommand : ICommand
 {
     private readonly Action _execute;

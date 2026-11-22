@@ -1,5 +1,5 @@
-﻿# Testing System v0.6
+﻿# Testing System v0.7
 
-Лекції (Markdown, MVVM), керування групами (адмін). Генерація AI у редакторі лекцій поки заглушка.
+Блокування сеансу після бездіяльності (екран блокування, ліміт спроб).
 
 Збірка: `dotnet build TestingSystem.csproj` (потрібен .NET 10 SDK, Windows).

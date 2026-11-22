@@ -4,26 +4,26 @@ using TestingSystem.Models;
 namespace TestingSystem.Services;
 
 /// <summary>
-/// Движок оценки. Автоматически проверяет все типы, кроме «ручных» (FileUpload и TextAnswer с
-/// ManualTeacherReview): они получают IsGraded=false, а работа — статус PendingTeacherReview.
-/// Не зависит ни от UI, ни от хранилища — его легко покрыть unit-тестами.
+/// Рушій оцінювання. Автоматично перевіряє всі типи, крім «ручних» (FileUpload і TextAnswer з
+/// ManualTeacherReview): вони отримують IsGraded=false, а робота — статус PendingTeacherReview.
+/// Не залежить ні від UI, ні від сховища — його легко покрити unit-тестами.
 /// </summary>
 public class GradingEngine
 {
     private const double Eps = 1e-9;
 
     /// <summary>
-    /// Нормализация текстового ответа: .Trim() убирает пробелы по краям, нижний регистр делает сравнение
-    /// нечувствительным к регистру. Используем ToLowerInvariant — это .ToLower() без зависимости от
-    /// региональных настроек ПК (иначе, например, в турецкой культуре "I" превратится в "ı").
+    /// Нормалізація текстової відповіді: .Trim() прибирає пробіли з країв, нижній регістр робить порівняння
+    /// нечутливим до регістру. Використовуємо ToLowerInvariant — це .ToLower() без залежності від
+    /// регіональних налаштувань ПК (інакше, наприклад, у турецькій культурі "I" перетвориться на "ı").
     /// </summary>
     public static string Normalize(string? input) => (input ?? string.Empty).Trim().ToLowerInvariant();
 
-    // ============================== оценка одного ответа ==============================
+    // ============================== оцінювання однієї відповіді ==============================
 
     public void GradeDetail(Question q, StudentAnswerDetail d)
     {
-        // снимок вопроса (нужен для разбора ошибок и аналитики)
+        // знімок питання (потрібен для розбору помилок і аналітики)
         d.QuestionId = q.Id;
         d.QuestionText = q.Text;
         d.QuestionType = q.QuestionType;
@@ -60,14 +60,14 @@ public class GradingEngine
         void Set(StudentAnswerDetail x, double score) { x.ScoreAwarded = Math.Round(score, 2); x.IsGraded = true; }
     }
 
-    /// <summary>Пустой ответ на «ручной» вопрос проверять не нужно (0 баллов); непустой уходит учителю.</summary>
+    /// <summary>Порожню відповідь на «ручне» питання перевіряти не потрібно (0 балів); непорожня йде вчителю.</summary>
     private static void MarkManual(StudentAnswerDetail d, bool hasContent)
     {
         d.ScoreAwarded = 0;
         d.IsGraded = !hasContent;
     }
 
-    // SingleChoice (RadioButton): точное совпадение — выбран ровно один и он правильный
+    // SingleChoice (RadioButton): точний збіг — вибрано рівно один і він правильний
     private static double GradeSingle(Question q, StudentAnswerDetail d)
     {
         if (d.SelectedAnswerIds.Count != 1) return 0;
@@ -75,8 +75,8 @@ public class GradingEngine
         return chosen is { IsCorrect: true } ? q.MaxScore : 0;
     }
 
-    // MultipleChoice (CheckBox): (верно выбранные − неверно выбранные) / всего верных, не ниже 0.
-    // Все верные и ни одного лишнего = полный балл, часть верных = частичный балл.
+    // MultipleChoice (CheckBox): (правильно вибрані − неправильно вибрані) / усього правильних, не нижче 0.
+    // Усі правильні і жодного зайвого = повний бал, частина правильних = частковий бал.
     private static double GradeMultiple(Question q, StudentAnswerDetail d)
     {
         var correct = q.Answers.Where(a => a.IsCorrect).Select(a => a.Id).ToHashSet();
@@ -88,7 +88,7 @@ public class GradingEngine
         return q.MaxScore * Math.Max(0, (right - wrong) / (double)correct.Count);
     }
 
-    // TextAnswer (AutoExactMatch / AutoContains): сравнение нормализованных строк
+    // TextAnswer (AutoExactMatch / AutoContains): порівняння нормалізованих рядків
     private static double GradeText(Question q, StudentAnswerDetail d)
     {
         string given = Normalize(d.GivenTextAnswer);
@@ -97,12 +97,12 @@ public class GradingEngine
         var accepted = q.Answers.Where(a => a.IsCorrect).Select(a => Normalize(a.Text)).Where(s => s.Length > 0).ToList();
 
         bool ok = q.TextEvaluationType == TextEvaluationType.AutoContains
-            ? accepted.Any(a => given.Contains(a))     // ответ СОДЕРЖИТ допустимую подстроку
-            : accepted.Contains(given);                // ответ СОВПАДАЕТ с одним из допустимых
+            ? accepted.Any(a => given.Contains(a))     // відповідь МІСТИТЬ допустимий підрядок
+            : accepted.Contains(given);                // відповідь ЗБІГАЄТЬСЯ з одним із допустимих
         return ok ? q.MaxScore : 0;
     }
 
-    // Matching: по баллу за каждую верную пару
+    // Matching: по балу за кожну правильну пару
     private static double GradeMatching(Question q, StudentAnswerDetail d)
     {
         var left = q.Answers.OrderBy(a => a.OrderIndex).ToList();
@@ -110,20 +110,20 @@ public class GradingEngine
 
         int right = 0;
         for (int i = 0; i < left.Count && i < d.SelectedAnswerIds.Count; i++)
-            if (d.SelectedAnswerIds[i] == left[i].Id) right++;   // выбрана правая часть именно этого варианта
+            if (d.SelectedAnswerIds[i] == left[i].Id) right++;   // вибрано праву частину саме цього варіанта
         return q.MaxScore * right / left.Count;
     }
 
-    // Sequence: полный балл только за полностью верный порядок
+    // Sequence: повний бал лише за повністю правильний порядок
     private static double GradeSequence(Question q, StudentAnswerDetail d)
     {
         var expected = q.Answers.OrderBy(a => a.OrderIndex).Select(a => a.Id).ToList();
         return expected.Count > 0 && expected.SequenceEqual(d.SelectedAnswerIds) ? q.MaxScore : 0;
     }
 
-    // ============================== результат попытки ==============================
+    // ============================== результат спроби ==============================
 
-    /// <summary>Строит результат: оценивает ответы на все вопросы теста (неотвеченные = 0 баллов).</summary>
+    /// <summary>Будує результат: оцінює відповіді на всі питання тесту (без відповіді = 0 балів).</summary>
     public Result BuildResult(TestSession session, Test test, IReadOnlyDictionary<int, StudentAnswerDetail> given, bool timedOut)
     {
         var result = new Result
@@ -148,7 +148,7 @@ public class GradingEngine
         return result;
     }
 
-    /// <summary>Учитель выставляет балл за «ручной» ответ (балл ограничивается диапазоном 0..MaxScore).</summary>
+    /// <summary>Учитель виставляє бал за «ручну» відповідь (бал обмежується діапазоном 0..MaxScore).</summary>
     public void ApplyManualScore(StudentAnswerDetail d, double score, string? note)
     {
         d.ScoreAwarded = Math.Round(Math.Clamp(score, 0, d.MaxScore), 2);
@@ -156,7 +156,7 @@ public class GradingEngine
         d.IsGraded = true;
     }
 
-    /// <summary>Завершение проверки: PendingTeacherReview -> Completed, пересчёт итогов и признака «сдал».</summary>
+    /// <summary>Завершення перевірки: PendingTeacherReview -> Completed, перерахунок підсумків і ознаки «склав».</summary>
     public void FinalizeReview(Result result, Test test, int teacherId)
     {
         Recalculate(result, test);
@@ -172,7 +172,7 @@ public class GradingEngine
         r.Percentage = r.MaxScore > Eps ? Math.Round(100 * r.TotalScore / r.MaxScore, 1) : 0;
     }
 
-    // ============================== текстовые описания ==============================
+    // ============================== текстові описи ==============================
 
     private static IEnumerable<Answer> Ordered(Question q) => q.Answers.OrderBy(a => a.OrderIndex);
 
@@ -205,7 +205,7 @@ public class GradingEngine
     }
 }
 
-/// <summary>Есть ли в ответе содержимое (используется для статуса «отвечено» в навигации).</summary>
+/// <summary>Чи містить відповідь вміст (використовується для статусу «відповідено» в навігації).</summary>
 public static class AnswerState
 {
     public static bool HasAnswer(StudentAnswerDetail? d)

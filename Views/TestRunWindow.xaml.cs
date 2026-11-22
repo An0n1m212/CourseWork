@@ -8,8 +8,8 @@ using TestingSystem.Services;
 namespace TestingSystem.Views;
 
 /// <summary>
-/// Экран прохождения теста. Логику сессии и таймера ведёт TestSessionController, нарушения — AntiCheatMonitor;
-/// окно только отображает состояние и передаёт действия пользователя.
+/// Екран проходження тесту. Логіку сесії та таймера веде TestSessionController, порушення — AntiCheatMonitor;
+/// вікно лише відображає стан і передає дії користувача.
 /// </summary>
 public partial class TestRunWindow : Window
 {
@@ -18,7 +18,7 @@ public partial class TestRunWindow : Window
     private readonly AppServices _s;
     private readonly TestSessionController _c;
     private readonly AntiCheatMonitor _anti;
-    private readonly IDisposable _idleSuspension;      // на время теста блокировка по бездействию не действует
+    private readonly IDisposable _idleSuspension;      // на час тесту блокування за бездіяльністю не діє
     private IQuestionView? _view;
     private int _index = -1;
 
@@ -28,7 +28,7 @@ public partial class TestRunWindow : Window
         _s = services;
         _c = controller;
 
-        // У теста свой таймер и античит; экран блокировки (отдельное окно) считался бы нарушением и мешал бы сдаче
+        // У тесту свій таймер і античит; екран блокування (окреме вікно) вважався б порушенням і заважав би складанню
         _idleSuspension = _s.Inactivity.Suspend();
 
         Title = _c.Test.Title;
@@ -41,13 +41,13 @@ public partial class TestRunWindow : Window
         _anti.LimitReached += (_, _) =>
         {
             ShowBanner(_s.Localization["Run_LimitReached"]);
-            _c.Submit();                                  // слишком много нарушений -> автоматическая сдача
+            _c.Submit();                                  // забагато порушень -> автоматичне складання
         };
 
-        // --- таймер и состояния сессии ---
+        // --- таймер і стани сесії ---
         _c.Tick += (_, _) => UpdateTimer();
         _c.TimeWarning += (_, _) => ShowBanner(_s.Localization["Run_TimeWarning"]);
-        _c.BeforeComplete += (_, _) => SaveCurrent();     // сохраняем ответ на текущий вопрос перед любым завершением
+        _c.BeforeComplete += (_, _) => SaveCurrent();     // зберігаємо відповідь на поточне питання перед будь-яким завершенням
         _c.Finished += (_, result) => OnFinished(result);
 
         Loaded += (_, _) =>
@@ -70,7 +70,7 @@ public partial class TestRunWindow : Window
 
         TimerText.Text = $"{(int)left.TotalMinutes:00}:{left.Seconds:00}";
         if (left.TotalSeconds <= TestSessionController.WarningSeconds)
-            TimerText.SetResourceReference(TextBlock.ForegroundProperty, "ErrorBrush");   // последняя минута — красным
+            TimerText.SetResourceReference(TextBlock.ForegroundProperty, "ErrorBrush");   // остання хвилина — червоним
         else
             TimerText.ClearValue(TextBlock.ForegroundProperty);
     }
@@ -91,7 +91,7 @@ public partial class TestRunWindow : Window
         ShowBanner(loc.Format(e.Kind == ViolationKind.Minimized ? "Run_ViolationMinimized" : "Run_ViolationFocus", e.Count, MaxViolations));
     }
 
-    // ---------------------------------------------------------------- вопросы
+    // ---------------------------------------------------------------- питання
 
     private void SaveCurrent()
     {
@@ -107,7 +107,7 @@ public partial class TestRunWindow : Window
         var q = rq.Source;
         var loc = _s.Localization;
 
-        // ФАБРИКА: UI создаётся по типу вопроса
+        // ФАБРИКА: UI створюється за типом питання
         _view = QuestionViewFactory.Create(rq, _anti, loc);
         _view.Load(_c.GetAnswer(q.Id));
         ContentHost.Content = _view.Element;
@@ -150,7 +150,7 @@ public partial class TestRunWindow : Window
     private void Prev_Click(object sender, RoutedEventArgs e) { if (_index > 0) ShowQuestion(_index - 1); }
     private void Next_Click(object sender, RoutedEventArgs e) { if (_index < _c.Questions.Count - 1) ShowQuestion(_index + 1); }
 
-    // ---------------------------------------------------------------- завершение
+    // ---------------------------------------------------------------- завершення
 
     private void Submit_Click(object sender, RoutedEventArgs e)
     {
@@ -160,7 +160,7 @@ public partial class TestRunWindow : Window
         string message = unanswered > 0 ? loc.Format("Run_ConfirmSubmitUnanswered", unanswered) : loc["Run_ConfirmSubmit"];
 
         MessageBoxResult answer;
-        using (_anti.Suspend())                           // собственный диалог — не нарушение
+        using (_anti.Suspend())                           // власний діалог — не порушення
             answer = MessageBox.Show(this, message, loc["Msg_ConfirmTitle"], MessageBoxButton.YesNo);
         if (answer == MessageBoxResult.Yes) _c.Submit();
     }
@@ -194,7 +194,7 @@ public partial class TestRunWindow : Window
                 answer = MessageBox.Show(this, loc["Run_ConfirmLeave"], loc["Msg_ConfirmTitle"], MessageBoxButton.YesNo);
 
             if (answer != MessageBoxResult.Yes) { e.Cancel = true; return; }
-            _c.Submit();                                  // выход = сдача того, что успел ответить
+            _c.Submit();                                  // вихід = складання того, на що встиг відповісти
         }
         base.OnClosing(e);
     }
@@ -202,7 +202,7 @@ public partial class TestRunWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _anti.Dispose();
-        _idleSuspension.Dispose();                        // отсчёт бездействия возобновится с нуля
+        _idleSuspension.Dispose();                        // відлік бездіяльності відновиться з нуля
         base.OnClosed(e);
     }
 }

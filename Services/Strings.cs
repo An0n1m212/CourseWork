@@ -1,15 +1,15 @@
 namespace TestingSystem.Services;
 
 /// <summary>
-/// Таблица строк: ключ -> (UA, RU, EN). Чтобы добавить язык, расширьте кортеж и enum AppLanguage;
-/// чтобы перейти на .resx/JSON, замените только источник данных в LocalizationService.
-/// Динамические ключи: Err_{AuthResult}, Role_{Role}, Status_{ResultStatus}, QType_/TEval_/Hint_/AnsHint_{тип}, StartErr_{StartError}.
+/// Таблиця рядків: ключ -> (UA, RU, EN). Щоб додати мову, розширте кортеж і enum AppLanguage;
+/// щоб перейти на .resx/JSON, замініть лише джерело даних у LocalizationService.
+/// Динамічні ключі: Err_{AuthResult}, Role_{Role}, Status_{ResultStatus}, QType_/TEval_/Hint_/AnsHint_{тип}, StartErr_{StartError}.
 /// </summary>
 internal static class Strings
 {
     public static readonly Dictionary<string, (string Ua, string Ru, string En)> Table = new()
     {
-        // ======================= общее =======================
+        // ======================= загальне =======================
         ["App_Title"]    = ("Система тестування", "Система тестирования", "Testing System"),
         ["Win_Teacher"]  = ("Робоче місце викладача", "Рабочее место преподавателя", "Teacher workspace"),
         ["Win_Student"]  = ("Кабінет учня", "Кабинет ученика", "Student workspace"),
@@ -40,6 +40,13 @@ internal static class Strings
         ["Lbl_Category"] = ("Категорія", "Категория", "Category"),
         ["Filter_AllGroups"] = ("Усі групи", "Все группы", "All groups"),
         ["Filter_AllTests"]  = ("Усі тести", "Все тесты", "All tests"),
+        ["Filter_AllCategories"] = ("Усі категорії", "Все категории", "All categories"),
+        ["Filter_Status"] = ("Статус:", "Статус:", "Status:"),
+        ["Filter_AllStatuses"] = ("Усі статуси", "Все статусы", "All statuses"),
+        ["Btn_ResetFilters"] = ("Скинути фільтри", "Сбросить фильтры", "Reset filters"),
+        ["Filter_NoMatches"] = ("Нічого не знайдено за заданими умовами.", "Ничего не найдено по заданным условиям.", "Nothing matches the selected filters."),
+        ["Msg_NoTestsYet"] = ("Список тестів порожній.", "Список тестов пуст.", "There are no tests yet."),
+        ["Msg_NoLecturesYet"] = ("Список лекцій порожній.", "Список лекций пуст.", "There are no lectures yet."),
 
         // ======================= вхід / реєстрація =======================
         ["Login_Title"]    = ("Вхід", "Вход", "Sign in"),
@@ -64,6 +71,18 @@ internal static class Strings
         ["Tab_Analytics"] = ("Журнал і аналітика", "Журнал и аналитика", "Gradebook & analytics"),
         ["Tab_Profile"]   = ("Профіль", "Профиль", "Profile"),
         ["Tab_Groups"]    = ("Групи", "Группы", "Groups"),
+        ["Tab_Categories"] = ("Категорії", "Категории", "Categories"),
+        ["Cat_Title"]     = ("Категорії тестів і лекцій", "Категории тестов и лекций", "Test and lecture categories"),
+        ["Cat_Hint"]      = ("Категорії допомагають групувати тести й лекції та швидко фільтрувати їх.", "Категории помогают группировать тесты и лекции и быстро фильтровать их.", "Categories help group tests and lectures and filter them quickly."),
+        ["Cat_NameLabel"] = ("Назва нової категорії:", "Название новой категории:", "New category name:"),
+        ["Btn_AddCategory"] = ("Додати категорію", "Добавить категорию", "Add category"),
+        ["Msg_SelectCategory"] = ("Виберіть категорію в таблиці.", "Выберите категорию в таблице.", "Select a category in the table."),
+        ["Msg_ConfirmDeleteCategory"] = ("Видалити категорію «{0}»?", "Удалить категорию «{0}»?", "Delete category \"{0}\"?"),
+        ["Err_CategoryNameRequired"] = ("Введіть назву категорії.", "Введите название категории.", "Enter the category name."),
+        ["Err_CategoryNameTaken"] = ("Категорія з такою назвою вже існує.", "Категория с таким названием уже существует.", "A category with this name already exists."),
+        ["Err_CategoryInUse"] = ("Не можна видалити категорію: вона використовується в тестах або лекціях.", "Нельзя удалить категорию: она используется в тестах или лекциях.", "Cannot delete the category: it is used by tests or lectures."),
+        ["Col_Category"] = ("Категорія", "Категория", "Category"),
+        ["Col_Usage"]    = ("Використань", "Использований", "Usages"),
         ["Grp_Title"]     = ("Групи студентів", "Группы студентов", "Student groups"),
         ["Grp_NameLabel"] = ("Назва нової групи:", "Название новой группы:", "New group name:"),
         ["Btn_AddGroup"]  = ("Додати групу", "Добавить группу", "Add group"),
@@ -401,6 +420,15 @@ internal static class Strings
         ["Err_SamePassword"]     = ("Новий пароль збігається зі старим.", "Новый пароль совпадает со старым.", "The new password is the same as the old one."),
         ["Err_UserNotFound"]     = ("Користувача не знайдено. Увійдіть знову.", "Пользователь не найден. Войдите заново.", "User not found. Please sign in again."),
         ["Err_Conflict"]         = ("Дані змінилися в іншому місці. Повторіть спробу.", "Данные изменились в другом месте. Повторите попытку.", "The data was changed elsewhere. Please try again."),
+        ["Grp_Students"]      = ("Студенти", "Студенты", "Students"),
+        ["Lbl_Search"]        = ("Пошук:", "Поиск:", "Search:"),
+        ["Lbl_NewGroup"]      = ("Перевести до групи:", "Перевести в группу:", "Move to group:"),
+        ["Btn_MoveToGroup"]   = ("Змінити групу", "Сменить группу", "Change group"),
+        ["Msg_SelectStudent"] = ("Виберіть студента в таблиці.", "Выберите студента в таблице.", "Select a student in the table."),
+        ["Msg_GroupChanged"]  = ("Студента «{0}» переведено до групи «{1}».", "Студент «{0}» переведён в группу «{1}».", "Student \"{0}\" was moved to group \"{1}\"."),
+        ["Col_Login"]         = ("Логін", "Логин", "Username"),
+        ["Col_Email"]         = ("Email", "Email", "Email"),
+        ["Err_AccessDenied"]  = ("Недостатньо прав для цієї дії.", "Недостаточно прав для этого действия.", "You do not have permission for this action."),
         ["Err_AvatarCopy"]       = ("Не вдалося зберегти фото профілю.", "Не удалось сохранить фото профиля.", "Could not save the profile photo."),
     };
 }

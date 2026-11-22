@@ -14,9 +14,23 @@
 
         <DockPanel Grid.Column="0">
             <TextBlock DockPanel.Dock="Top" Text="{loc:T Tab_Lectures}" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" />
-            <TextBlock DockPanel.Dock="Top" Text="{loc:T Lect_Empty}" TextWrapping="Wrap" Margin="0,0,0,8"
+
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                <TextBlock Text="{loc:T Lbl_Search}" />
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Padding="4" Margin="0,2,0,8" />
+
+                <TextBlock Text="{loc:T Lbl_Category}" />
+                <ComboBox ItemsSource="{Binding CategoryOptions}" SelectedItem="{Binding SelectedCategory}"
+                          DisplayMemberPath="Text" Padding="4" Margin="0,2,0,8" />
+
+                <Button Content="{loc:T Btn_ResetFilters}" Command="{Binding ResetFiltersCommand}"
+                        Padding="10,4" HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <TextBlock DockPanel.Dock="Top" Text="{Binding EmptyMessage}" TextWrapping="Wrap" Margin="0,0,0,8"
                        Foreground="{DynamicResource SecondaryTextBrush}"
                        Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}" />
+
             <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
                      HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>

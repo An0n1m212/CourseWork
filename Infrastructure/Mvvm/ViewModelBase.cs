@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace TestingSystem.Infrastructure.Mvvm;
 
-/// <summary>Базовый класс ViewModel: уведомление View об изменении свойств (INotifyPropertyChanged).</summary>
+/// <summary>Базовий клас ViewModel: повідомлення View про зміну властивостей (INotifyPropertyChanged).</summary>
 public abstract class ViewModelBase : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;

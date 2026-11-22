@@ -4,7 +4,7 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Views;
 
-/// <summary>Скачивание PDF-сертификата (используется в профиле и в «Моих результатах»).</summary>
+/// <summary>Завантаження PDF-сертифіката (використовується в профілі та в «Моїх результатах»).</summary>
 public static class CertificateHelper
 {
     public static void Download(AppServices s, Result result, Window? owner)

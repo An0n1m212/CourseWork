@@ -8,7 +8,7 @@ public record TeacherStats(int TestsCreated, int WorksReviewed, int PendingRevie
 public record GroupStat(string GroupName, int Students, int Attempts, double AveragePercent, double PassRatePercent);
 public record ProgressPoint(DateTime Date, double Percent);
 
-/// <summary>Расчёт статистики и аналитики. Работает только через интерфейсы репозиториев.</summary>
+/// <summary>Розрахунок статистики та аналітики. Працює лише через інтерфейси репозиторіїв.</summary>
 public class StatisticsService
 {
     public const double HardThresholdPercent = 50;
@@ -34,7 +34,7 @@ public class StatisticsService
         return new StudentStats(done.Count, done.Count == 0 ? 0 : done.Average(r => r.Percentage), done.Count(r => r.IsPassed));
     }
 
-    /// <summary>Динамика успеваемости ученика (по возрастанию даты).</summary>
+    /// <summary>Динаміка успішності учня (за зростанням дати).</summary>
     public IReadOnlyList<ProgressPoint> GetStudentProgress(int studentId)
         => _results.GetByStudent(studentId).Where(IsFinal).OrderBy(r => r.Date)
             .Select(r => new ProgressPoint(r.Date, r.Percentage)).ToList();
@@ -55,7 +55,7 @@ public class StatisticsService
             final.Count == 0 ? 0 : final.Average(r => r.Percentage));
     }
 
-    /// <summary>Статистика по группам учеников, проходивших тесты данного учителя.</summary>
+    /// <summary>Статистика за групами учнів, які проходили тести цього вчителя.</summary>
     public IReadOnlyList<GroupStat> GetGroupStats(User teacher)
     {
         var results = TestsOf(teacher).SelectMany(t => _results.GetByTest(t.Id)).Where(IsFinal).ToList();
@@ -75,8 +75,8 @@ public class StatisticsService
     }
 
     /// <summary>
-    /// Сложность вопросов: какая доля оценённых ответов НЕ получила полный балл.
-    /// Вопросы, где ошибаются чаще порога (50%), помечаются как «сложные» и подсвечиваются в UI.
+    /// Складність питань: яка частка оцінених відповідей НЕ отримала повний бал.
+    /// Питання, де помиляються частіше за поріг (50%), позначаються як «складні» і підсвічуються в UI.
     /// </summary>
     public IReadOnlyList<QuestionDifficulty> GetQuestionDifficulty(IEnumerable<Result> results)
     {

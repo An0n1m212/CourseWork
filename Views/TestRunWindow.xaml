@@ -22,7 +22,7 @@
                 <TextBlock x:Name="TestTitleText" FontSize="22" FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" />
             </DockPanel>
 
-            <!-- баннер предупреждений: таймер, античит -->
+            <!-- банер попереджень: таймер, античит -->
             <Border x:Name="Banner" Grid.Row="1" Visibility="Collapsed" Margin="0,8,0,0" Padding="10,6" CornerRadius="4"
                     Background="{DynamicResource HardRowBrush}">
                 <TextBlock x:Name="BannerText" TextWrapping="Wrap" FontWeight="SemiBold" />
@@ -35,7 +35,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!-- навигация по вопросам + статус-бар отвеченных -->
+                <!-- навігація по питаннях + статус-бар відповідених -->
                 <Border Style="{StaticResource CardStyle}" Padding="12" Margin="0">
                     <StackPanel>
                         <TextBlock Text="{loc:T Run_Navigation}" FontWeight="SemiBold" Margin="0,0,0,8" />
@@ -45,7 +45,7 @@
                     </StackPanel>
                 </Border>
 
-                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
                     <StackPanel>
                         <TextBlock x:Name="QuestionHeader" Foreground="{DynamicResource SecondaryTextBrush}" />
                         <Image x:Name="MediaImage" MaxHeight="240" HorizontalAlignment="Left" Margin="0,8,0,0" Visibility="Collapsed" />
@@ -65,7 +65,7 @@
             </DockPanel>
         </Grid>
 
-        <!-- ===== итог (показывается после сдачи / по таймауту) ===== -->
+        <!-- ===== підсумок (показується після здачі / за таймаутом) ===== -->
         <Border x:Name="ResultOverlay" Visibility="Collapsed" Background="{DynamicResource CardBackgroundBrush}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="560">
                 <TextBlock x:Name="ResultTitle" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
