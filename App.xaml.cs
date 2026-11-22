@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using TestingSystem.Abstractions;
 using TestingSystem.Infrastructure;
@@ -65,12 +66,22 @@ public partial class App : Application, ISessionNavigator
         sc.AddSingleton<StatisticsService>();
         sc.AddSingleton<IReportExportService, ReportExportService>();
         sc.AddSingleton<ILectureService, LectureService>();
-        sc.AddSingleton<IAiAssistant, DisabledAiAssistant>();   // заглушка до v0.8
+
+        // ---------- AI: взаємозамінні провайдери-стратегії ----------
+        sc.AddSingleton(new HttpClient { Timeout = Timeout.InfiniteTimeSpan });   // таймаут задає AiClientRouter
+        sc.AddSingleton<IAiSettingsStore, JsonAiSettingsStore>();
+        sc.AddSingleton<IAiProvider, MockAiProvider>();
+        sc.AddSingleton<IAiProvider, OpenAiCompatibleProvider>();
+        sc.AddSingleton<IAiProvider, AnthropicProvider>();
+        sc.AddSingleton<IAiClient, AiClientRouter>();
+        sc.AddSingleton<IAiAssistant, AiAssistant>();
 
         // ---------- MVVM-інфраструктура ----------
         sc.AddSingleton<IDialogService>(_ => new WpfDialogService()
-            .Register<LectureEditorViewModel, LectureEditorWindow>());
+            .Register<LectureEditorViewModel, LectureEditorWindow>()
+            .Register<AiSettingsViewModel, AiSettingsWindow>());
         sc.AddSingleton<IViewModelFactory, ViewModelFactory>();
+        sc.AddSingleton<ITestEditorLauncher, WpfTestEditorLauncher>();
 
         // ---------- блокування сеансу після бездіяльності ----------
         sc.AddSingleton(new InactivitySettings(Timeout: TimeSpan.FromMinutes(30), MaxUnlockAttempts: 5));
