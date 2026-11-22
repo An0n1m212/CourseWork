@@ -8,14 +8,14 @@ using TestingSystem.Services;
 namespace TestingSystem.Views;
 
 /// <summary>
-/// Личный кабинет (общий для всех ролей): карточка профиля, аватар, смена пароля, системные настройки
-/// и статистика, зависящая от роли (ученик: динамика и сертификаты; учитель: проверки и группы).
+/// Особистий кабінет (спільний для всіх ролей): картка профілю, аватар, зміна пароля, системні налаштування
+/// та статистика, що залежить від ролі (учень: динаміка й сертифікати; вчитель: перевірки та групи).
 /// </summary>
 public partial class ProfileView : UserControl
 {
     private readonly AppServices _s;
-    private string? _avatarPath;             // аватар, который будет сохранён
-    private string? _pendingAvatarSource;    // выбранный, но ещё не скопированный файл
+    private string? _avatarPath;             // аватар, який буде збережено
+    private string? _pendingAvatarSource;    // вибраний, але ще не скопійований файл
 
     public ProfileView(AppServices services)
     {
@@ -40,7 +40,7 @@ public partial class ProfileView : UserControl
         if (user != null) ApplyTexts(user);
     }
 
-    // ---------------------------------------------------------------- загрузка
+    // ---------------------------------------------------------------- завантаження
 
     private void Reload()
     {
@@ -108,7 +108,7 @@ public partial class ProfileView : UserControl
         var dialog = new OpenFileDialog { Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp;*.gif" };
         if (dialog.ShowDialog() != true) return;
 
-        _pendingAvatarSource = dialog.FileName;                       // предпросмотр до сохранения
+        _pendingAvatarSource = dialog.FileName;                       // попередній перегляд до збереження
         Avatar.Show(user.Id, FullNameBox.Text, _pendingAvatarSource);
     }
 
@@ -117,10 +117,10 @@ public partial class ProfileView : UserControl
         var user = _s.Auth.GetCurrentUser()!;
         _avatarPath = null;
         _pendingAvatarSource = null;
-        Avatar.Show(user.Id, FullNameBox.Text, null);                 // аватар по умолчанию
+        Avatar.Show(user.Id, FullNameBox.Text, null);                 // аватар за замовчуванням
     }
 
-    // ---------------------------------------------------------------- сохранение профиля
+    // ---------------------------------------------------------------- збереження профілю
 
     private void SaveProfile_Click(object sender, RoutedEventArgs e)
     {
@@ -138,8 +138,8 @@ public partial class ProfileView : UserControl
             }
         }
 
-        // IAuthService -> IUserRepository.UpdateProfile: InMemory меняет запись в словаре,
-        // SQLite/EF Core выполнит UPDATE Users ... WHERE Id=@id (UI и сервис не меняются)
+        // IAuthService -> IUserRepository.UpdateProfile: InMemory змінює запис у словнику,
+        // SQLite/EF Core виконає UPDATE Users ... WHERE Id=@id (UI та сервіс не змінюються)
         var result = _s.Auth.UpdateProfile(FullNameBox.Text, EmailBox.Text, avatarToSave);
         if (result != AuthResult.Success)
         {
@@ -147,18 +147,18 @@ public partial class ProfileView : UserControl
             return;
         }
 
-        Reload();   // шапка обновится по событию CurrentUserChanged
+        Reload();   // шапка оновиться за подією CurrentUserChanged
         SetStatus(ProfileStatus, loc["Msg_ProfileSaved"], isError: false);
     }
 
-    // ---------------------------------------------------------------- смена пароля
+    // ---------------------------------------------------------------- зміна пароля
 
     private void ChangePassword_Click(object sender, RoutedEventArgs e)
     {
         var loc = _s.Localization;
 
-        // Ошибки (неверный старый пароль, слишком короткий новый, несовпадение, тот же пароль)
-        // приходят кодом AuthResult и показываются на выбранном языке
+        // Помилки (неправильний старий пароль, занадто короткий новий, незбіг, той самий пароль)
+        // надходять кодом AuthResult і показуються вибраною мовою
         var result = _s.Auth.ChangePassword(OldPasswordBox.Password, NewPasswordBox.Password, ConfirmPasswordBox.Password);
         if (result != AuthResult.Success)
         {
@@ -170,7 +170,7 @@ public partial class ProfileView : UserControl
         SetStatus(PasswordStatus, loc["Msg_PasswordChanged"], isError: false);
     }
 
-    // ---------------------------------------------------------------- сертификаты
+    // ---------------------------------------------------------------- сертифікати
 
     private void Certificate_Click(object sender, RoutedEventArgs e)
     {

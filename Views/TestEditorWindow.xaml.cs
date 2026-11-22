@@ -10,9 +10,9 @@ using TestingSystem.Services;
 namespace TestingSystem.Views;
 
 /// <summary>
-/// Конструктор теста: настройки (категория, лимит времени, проходной балл, попытки, перемешивание,
-/// пин-код, группы) и банк вопросов 6 типов с медиафайлом и пояснением. Работает с копией теста —
-/// в хранилище пишет только по «Сохранить тест».
+/// Конструктор тесту: налаштування (категорія, ліміт часу, прохідний бал, спроби, перемішування,
+/// пін-код, групи) та банк питань 6 типів з медіафайлом і поясненням. Працює з копією тесту —
+/// у сховище пише лише за «Зберегти тест».
 /// </summary>
 public partial class TestEditorWindow : Window
 {
@@ -42,7 +42,7 @@ public partial class TestEditorWindow : Window
         _test = existing ?? new Test { AuthorTeacherId = _s.Auth.GetCurrentUser()!.Id };
         Title = existing == null ? loc["Editor_NewTest"] : loc.Format("Editor_EditTest", existing.Title);
 
-        // --- настройки теста ---
+        // --- налаштування тесту ---
         TitleBox.Text = _test.Title;
         DescBox.Text = _test.Description;
         TimeBox.Text = _test.TimeLimitMinutes.ToString();
@@ -62,7 +62,7 @@ public partial class TestEditorWindow : Window
         foreach (Group g in GroupsList.Items)
             if (_test.AssignedGroupIds.Contains(g.Id)) GroupsList.SelectedItems.Add(g);
 
-        // --- вопросы ---
+        // --- питання ---
         _questions = new ObservableCollection<Question>(_test.Questions);
         QuestionsList.ItemsSource = _questions;
 
@@ -75,7 +75,7 @@ public partial class TestEditorWindow : Window
         ApplyType();
     }
 
-    // ---------------------------------------------------------------- динамические поля ответов
+    // ---------------------------------------------------------------- динамічні поля відповідей
 
     private void BuildSlots()
     {
@@ -110,7 +110,7 @@ public partial class TestEditorWindow : Window
         if (!_loading && IsLoaded) ApplyType();
     }
 
-    /// <summary>Подстраивает редактор ответов под выбранный тип вопроса.</summary>
+    /// <summary>Налаштовує редактор відповідей під вибраний тип питання.</summary>
     private void ApplyType()
     {
         if (_slots.Count == 0) return;
@@ -130,7 +130,7 @@ public partial class TestEditorWindow : Window
         }
     }
 
-    // ---------------------------------------------------------------- вопрос <-> форма
+    // ---------------------------------------------------------------- питання <-> форма
 
     private void QuestionsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -181,7 +181,7 @@ public partial class TestEditorWindow : Window
     private static bool TryParseDouble(string text, out double value)
         => double.TryParse(text.Trim().Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out value);
 
-    /// <summary>Собирает вопрос из формы; для каждого типа — своя валидация. null — данные некорректны.</summary>
+    /// <summary>Збирає питання з форми; для кожного типу — своя валідація. null — дані некоректні.</summary>
     private Question? BuildQuestion()
     {
         var loc = _s.Localization;
@@ -213,7 +213,7 @@ public partial class TestEditorWindow : Window
                     break;
                 case QuestionType.Matching:
                     if (filled.Count < 2 || filled.Any(s => string.IsNullOrWhiteSpace(s.Pair.Text))) return Fail("Err_Q_Pairs");
-                    // правые части должны быть уникальны: именно по ним ученик выбирает соответствие
+                    // праві частини мають бути унікальними: саме за ними учень вибирає відповідність
                     if (filled.Select(s => s.Pair.Text.Trim().ToLowerInvariant()).Distinct().Count() != filled.Count) return Fail("Err_Q_PairsUnique");
                     break;
                 case QuestionType.Sequence:
@@ -233,7 +233,7 @@ public partial class TestEditorWindow : Window
                     {
                         QuestionType.SingleChoice => s.Radio.IsChecked == true,
                         QuestionType.MultipleChoice => s.Check.IsChecked == true,
-                        QuestionType.TextAnswer => true,       // каждая запись — допустимый ответ
+                        QuestionType.TextAnswer => true,       // кожен запис — допустима відповідь
                         _ => false
                     }
                 });
@@ -258,7 +258,7 @@ public partial class TestEditorWindow : Window
         }
     }
 
-    // ---------------------------------------------------------------- кнопки вопросов
+    // ---------------------------------------------------------------- кнопки питань
 
     private void AddQuestion_Click(object sender, RoutedEventArgs e)
     {
@@ -276,7 +276,7 @@ public partial class TestEditorWindow : Window
         var q = BuildQuestion();
         if (q == null) return;
 
-        q.Id = _questions[idx].Id;                // сохраняем идентичность вопроса
+        q.Id = _questions[idx].Id;                // зберігаємо ідентичність питання
         _questions[idx] = q;
         QuestionsList.SelectedIndex = idx;
     }
@@ -297,7 +297,7 @@ public partial class TestEditorWindow : Window
         if (dialog.ShowDialog(this) != true) return;
         try
         {
-            _mediaPath = AppFiles.CopyIn("media", dialog.FileName, "media");   // копия, независимая от исходного файла
+            _mediaPath = AppFiles.CopyIn("media", dialog.FileName, "media");   // копія, незалежна від вихідного файлу
             MediaBox.Text = Path.GetFileName(_mediaPath);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
@@ -312,14 +312,14 @@ public partial class TestEditorWindow : Window
         MediaBox.Clear();
     }
 
-    // ---------------------------------------------------------------- сохранение теста
+    // ---------------------------------------------------------------- збереження тесту
 
     private int? ResolveCategory()
     {
         string name = CategoryCombo.Text.Trim();
         if (name.Length == 0) return null;
 
-        // Можно выбрать существующую категорию или ввести новую — она будет создана
+        // Можна вибрати наявну категорію або ввести нову — її буде створено
         var existing = _s.Categories.GetAll().FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
         return (existing ?? _s.Categories.Save(new Category { Name = name })).Id;
     }

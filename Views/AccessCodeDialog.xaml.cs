@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace TestingSystem.Views;
 
-/// <summary>Запрос пин-кода доступа к защищённому тесту.</summary>
+/// <summary>Запит пін-коду доступу до захищеного тесту.</summary>
 public partial class AccessCodeDialog : Window
 {
     public string Code => CodeBox.Password;

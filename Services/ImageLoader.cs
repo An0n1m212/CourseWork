@@ -6,7 +6,7 @@ namespace TestingSystem.Services;
 
 public static class ImageLoader
 {
-    /// <summary>Безопасно загружает картинку (файл не блокируется). null — файла нет или он повреждён.</summary>
+    /// <summary>Безпечно завантажує картинку (файл не блокується). null — файлу немає або він пошкоджений.</summary>
     public static ImageSource? TryLoad(string? path)
     {
         if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return null;

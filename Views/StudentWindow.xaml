@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:TestingSystem.Views"
         xmlns:loc="clr-namespace:TestingSystem.Infrastructure"
-        Title="{loc:T Win_Student}" Height="740" Width="1060" WindowStartupLocation="CenterScreen">
+        Title="{loc:T Win_Student}" Height="740" Width="1060" MinHeight="600" MinWidth="900" WindowStartupLocation="CenterScreen">
     <DockPanel>
         <v:HeaderBar x:Name="Header" DockPanel.Dock="Top" />
         <TabControl x:Name="Tabs">

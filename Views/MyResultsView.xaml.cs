@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace TestingSystem.Views;
 
-/// <summary>Результаты ТОЛЬКО текущего ученика: разбор ошибок и скачивание сертификатов.</summary>
+/// <summary>Результати ЛИШЕ поточного учня: розбір помилок і завантаження сертифікатів.</summary>
 public partial class MyResultsView : UserControl
 {
     private readonly AppServices _s;
@@ -41,7 +41,7 @@ public partial class MyResultsView : UserControl
             MessageBox.Show(_s.Localization["Msg_SelectResult"]); return;
         }
 
-        // Правильные ответы и пояснения — только если учитель это разрешил
+        // Правильні відповіді та пояснення — лише якщо вчитель це дозволив
         var test = _s.Tests.GetById(row.Source.TestId);
         bool showCorrect = test?.AllowShowExplanations ?? false;
 

@@ -21,6 +21,7 @@ public sealed record AppServices(
     ICategoryRepository Categories,
     ITestRepository Tests,
     IResultRepository Results,
+    ILectureRepository Lectures,
     IAuthService Auth,
     ILocalizationService Localization,
     IThemeService Theme,
@@ -29,11 +30,12 @@ public sealed record AppServices(
     StatisticsService Stats,
     IReportExportService Export,
     IInactivityMonitor Inactivity,
+    ISessionLockService SessionLock,
     IAiAssistant AiAssistant,
     IViewModelFactory ViewModels,
     StorageInfo Storage);
 
-public partial class App : Application
+public partial class App : Application, ISessionNavigator
 {
     private ServiceProvider _provider = null!;
     private AppServices _services = null!;
@@ -69,7 +71,16 @@ public partial class App : Application
         sc.AddSingleton<IDialogService>(_ => new WpfDialogService()
             .Register<LectureEditorViewModel, LectureEditorWindow>());
         sc.AddSingleton<IViewModelFactory, ViewModelFactory>();
-        sc.AddSingleton<IInactivityMonitor, NullInactivityMonitor>();   // заглушка до v0.7
+
+        // ---------- блокування сеансу після бездіяльності ----------
+        sc.AddSingleton(new InactivitySettings(Timeout: TimeSpan.FromMinutes(30), MaxUnlockAttempts: 5));
+        sc.AddSingleton<IClock, SystemClock>();
+        sc.AddSingleton<IActivitySource, WpfInputActivitySource>();
+        sc.AddTransient<ITicker>(_ => new DispatcherTicker(TimeSpan.FromSeconds(5)));
+        sc.AddSingleton<IInactivityMonitor, InactivityMonitor>();
+        sc.AddSingleton<ILockScreenPresenter, WpfLockScreenPresenter>();
+        sc.AddSingleton<ISessionNavigator>(_ => this);
+        sc.AddSingleton<ISessionLockService, SessionLockService>();
 
         sc.AddSingleton<AppServices>();
 
@@ -93,6 +104,20 @@ public partial class App : Application
     }
 
     public void ShowLogin() => new LoginWindow(_services, ShowWorkspace).Show();
+
+    /// <summary>ISessionNavigator: примусовий вихід (наприклад, з екрана блокування).</summary>
+    public void NavigateToLogin()
+    {
+        _services.Auth.Logout();
+
+        var toClose = Windows.OfType<Window>()
+            .Where(w => w is not SessionLockWindow && w is not LoginWindow)
+            .OrderByDescending(w => w.Owner != null)
+            .ToList();
+
+        ShowLogin();
+        foreach (var window in toClose) window.Close();
+    }
 
     /// <summary>Маршрутизація за роллю: студент - кабінет студента, викладач і адмін - місце викладача.</summary>
     private void ShowWorkspace(User user)

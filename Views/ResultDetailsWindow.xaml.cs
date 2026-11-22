@@ -3,7 +3,7 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Views;
 
-/// <summary>Элемент разбора: ответ ученика, правильный ответ, балл, пояснение.</summary>
+/// <summary>Елемент розбору: відповідь учня, правильна відповідь, бал, пояснення.</summary>
 public class DetailItem
 {
     public string QuestionText { get; init; } = "";
@@ -20,8 +20,8 @@ public class DetailItem
 }
 
 /// <summary>
-/// Подробный разбор попытки. Ученик видит правильные ответы и пояснения, только если это разрешил учитель
-/// (Test.AllowShowExplanations); учитель и админ видят всё.
+/// Детальний розбір спроби. Учень бачить правильні відповіді та пояснення, лише якщо це дозволив учитель
+/// (Test.AllowShowExplanations); вчитель і адмін бачать усе.
 /// </summary>
 public partial class ResultDetailsWindow : Window
 {

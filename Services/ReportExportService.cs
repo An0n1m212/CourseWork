@@ -12,8 +12,8 @@ using TestingSystem.Models;
 namespace TestingSystem.Services;
 
 /// <summary>
-/// Экспорт: CSV (UTF-8 с BOM, разделитель «;» — открывается в Excel), XLSX (минимальный OpenXML без внешних
-/// библиотек) и PDF (QuestPDF) — отчёты и именные сертификаты. Подписи колонок локализуются текущим языком.
+/// Експорт: CSV (UTF-8 з BOM, роздільник «;» — відкривається в Excel), XLSX (мінімальний OpenXML без зовнішніх
+/// бібліотек) і PDF (QuestPDF) — звіти та іменні сертифікати. Підписи колонок локалізуються поточною мовою.
 /// </summary>
 public class ReportExportService : IReportExportService
 {
@@ -67,7 +67,7 @@ public class ReportExportService : IReportExportService
         WriteXlsx(path, table);
     }
 
-    /// <summary>Минимальный валидный .xlsx: zip из нескольких XML-файлов; строки — inlineStr, числа — как есть.</summary>
+    /// <summary>Мінімальний валідний .xlsx: zip із кількох XML-файлів; рядки — inlineStr, числа — як є.</summary>
     private static void WriteXlsx(string path, List<object[]> table)
     {
         if (File.Exists(path)) File.Delete(path);
@@ -116,7 +116,7 @@ public class ReportExportService : IReportExportService
         }
     }
 
-    // ============================== PDF: отчёт ==============================
+    // ============================== PDF: звіт ==============================
 
     public void ExportReportPdf(ReportData report, string path)
     {

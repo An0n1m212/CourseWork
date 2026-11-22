@@ -5,7 +5,7 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Views;
 
-/// <summary>Журнал и аналитика: результаты с фильтром по группе/тесту, сложные вопросы, экспорт и отчёт.</summary>
+/// <summary>Журнал та аналітика: результати з фільтром за групою/тестом, складні питання, експорт і звіт.</summary>
 public partial class AnalyticsView : UserControl
 {
     private readonly AppServices _s;
@@ -28,7 +28,7 @@ public partial class AnalyticsView : UserControl
 
     private void OnLanguageChanged(object? sender, EventArgs e) => ReloadFilters();
 
-    /// <summary>Заполняет фильтры (Id = 0 — служебный пункт «Все») и запускает перерасчёт таблиц.</summary>
+    /// <summary>Заповнює фільтри (Id = 0 — службовий пункт «Усі») і запускає перерахунок таблиць.</summary>
     private void ReloadFilters()
     {
         var loc = _s.Localization;
@@ -65,11 +65,22 @@ public partial class AnalyticsView : UserControl
         if (group.Id != 0) results = results.Where(r => students.TryGetValue(r.StudentId, out var u) && u.GroupId == group.Id);
         var list = results.ToList();
 
-        _rows = new ResultRowFactory(_s).Build(list);
-        _hard = _s.Stats.GetQuestionDifficulty(list);
+        var all = new ResultRowFactory(_s).Build(list);
+        string q = SearchBox.Text.Trim();
+        _rows = q.Length == 0 ? all : all.Where(r =>
+            r.Student.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+            r.Test.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+            r.Group.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+        _hard = _s.Stats.GetQuestionDifficulty(_rows.Select(r => r.Source));
 
         ResultsGrid.ItemsSource = _rows;
         HardGrid.ItemsSource = _hard;
+    }
+
+    private void Search_Changed(object sender, TextChangedEventArgs e)
+    {
+        if (GroupCombo.SelectedItem is null || TestCombo.SelectedItem is null) return;
+        Refresh();
     }
 
     private void ResultsGrid_DoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -78,7 +89,7 @@ public partial class AnalyticsView : UserControl
         new ResultDetailsWindow(_s, row.Source, row.Test, showCorrect: true) { Owner = Window.GetWindow(this) }.ShowDialog();
     }
 
-    // ---------------------------------------------------------------- экспорт
+    // ---------------------------------------------------------------- експорт
 
     private IReadOnlyList<ResultExportRow> ExportRows() => _rows.Select(r => r.ToExport()).ToList();
 
@@ -114,7 +125,7 @@ public partial class AnalyticsView : UserControl
             action(dialog.FileName);
             MessageBox.Show(loc["Msg_Saved"]);
         }
-        catch (Exception ex)   // IO-ошибки, файл занят Excel'ом и т.п.
+        catch (Exception ex)   // IO-помилки, файл зайнятий Excel'ом тощо
         {
             MessageBox.Show($"{loc["Err_ExportFailed"]}\n{ex.Message}");
         }

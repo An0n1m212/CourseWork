@@ -5,7 +5,7 @@ using TestingSystem.Models;
 
 namespace TestingSystem.ViewModels;
 
-/// <summary>Вкладка студента «Лекції»: опубліковані лекції його групи та читання вибраної.</summary>
+/// <summary>Вкладка студента «Лекції»: опубліковані лекції його групи, пошук, фільтр за категоріями та читання вибраної.</summary>
 public sealed class StudentLecturesViewModel : ViewModelBase, IViewLifecycle
 {
     private readonly ILectureService _lectures;
@@ -13,9 +13,14 @@ public sealed class StudentLecturesViewModel : ViewModelBase, IViewLifecycle
     private readonly ICategoryRepository _categories;
     private readonly ITestRepository _tests;
     private readonly ILocalizationService _loc;
+
+    private readonly List<Lecture> _all = new();
     private LectureItemViewModel? _selectedItem;
+    private string _searchText = string.Empty;
+    private Option<int?>? _selectedCategory;
 
     public ObservableCollection<LectureItemViewModel> Items { get; } = new();
+    public ObservableCollection<Option<int?>> CategoryOptions { get; } = new();
 
     public LectureItemViewModel? SelectedItem
     {
@@ -31,7 +36,26 @@ public sealed class StudentLecturesViewModel : ViewModelBase, IViewLifecycle
         }
     }
 
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            if (SetProperty(ref _searchText, value ?? string.Empty)) ApplyFilter();
+        }
+    }
+
+    public Option<int?>? SelectedCategory
+    {
+        get => _selectedCategory;
+        set
+        {
+            if (SetProperty(ref _selectedCategory, value)) ApplyFilter();
+        }
+    }
+
     public bool IsEmpty => Items.Count == 0;
+    public string EmptyMessage => _all.Count == 0 ? _loc["Lect_Empty"] : _loc["Filter_NoMatches"];
     public bool HasSelection => _selectedItem != null;
     public string SelectedTitle => _selectedItem?.Title ?? string.Empty;
     public string SelectedContent => _selectedItem?.Source.Content ?? string.Empty;
@@ -57,6 +81,8 @@ public sealed class StudentLecturesViewModel : ViewModelBase, IViewLifecycle
             ? _loc.Format("Lect_RelatedTest", test.Title)
             : string.Empty;
 
+    public RelayCommand ResetFiltersCommand { get; }
+
     public StudentLecturesViewModel(ILectureService lectures, IUserRepository users, ICategoryRepository categories,
                                     ITestRepository tests, ILocalizationService loc)
     {
@@ -65,6 +91,8 @@ public sealed class StudentLecturesViewModel : ViewModelBase, IViewLifecycle
         _categories = categories;
         _tests = tests;
         _loc = loc;
+
+        ResetFiltersCommand = new RelayCommand(ResetFilters);
     }
 
     public void OnShown()
@@ -81,11 +109,57 @@ public sealed class StudentLecturesViewModel : ViewModelBase, IViewLifecycle
     {
         int? selectedId = SelectedItem?.Source.Id;
 
+        _all.Clear();
+        _all.AddRange(_lectures.GetForCurrentStudent());
+
+        RefreshCategoryOptions();
+        ApplyFilter(selectedId);
+    }
+
+    private void RefreshCategoryOptions()
+    {
+        int? categoryId = SelectedCategory?.Value;
+
+        CategoryOptions.Clear();
+        CategoryOptions.Add(new Option<int?>(null, _loc["Filter_AllCategories"]));
+        foreach (var category in _categories.GetAll())
+            CategoryOptions.Add(new Option<int?>(category.Id, category.Name));
+
+        _selectedCategory = CategoryOptions.FirstOrDefault(o => o.Value == categoryId) ?? CategoryOptions[0];
+        OnPropertyChanged(nameof(SelectedCategory));
+    }
+
+    private void ApplyFilter(int? selectedId = null)
+    {
+        selectedId ??= SelectedItem?.Source.Id;
+
+        string query = SearchText.Trim();
+        int? categoryId = SelectedCategory?.Value;
+
+        var filtered = _all
+            .Where(l => categoryId is null || l.CategoryId == categoryId)
+            .Where(l => query.Length == 0 || Matches(l, query))
+            .ToList();
+
         Items.Clear();
-        foreach (var lecture in _lectures.GetForCurrentStudent())
+        foreach (var lecture in filtered)
             Items.Add(new LectureItemViewModel(lecture, lecture.UpdatedAt.ToString("dd.MM.yyyy")));
 
         SelectedItem = Items.FirstOrDefault(i => i.Source.Id == selectedId) ?? Items.FirstOrDefault();
         OnPropertyChanged(nameof(IsEmpty));
+        OnPropertyChanged(nameof(EmptyMessage));
+    }
+
+    private static bool Matches(Lecture lecture, string query)
+        => lecture.Title.Contains(query, StringComparison.OrdinalIgnoreCase)
+           || lecture.Summary.Contains(query, StringComparison.OrdinalIgnoreCase)
+           || lecture.Content.Contains(query, StringComparison.OrdinalIgnoreCase);
+
+    private void ResetFilters()
+    {
+        _searchText = string.Empty;
+        OnPropertyChanged(nameof(SearchText));
+        SelectedCategory = CategoryOptions.FirstOrDefault();
+        ApplyFilter();
     }
 }

@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Параметри лекції -->
-        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
             <StackPanel>
                 <TextBlock Text="{loc:T Lect_FieldTitle}" />
                 <TextBox Text="{Binding LectureTitle, UpdateSourceTrigger=PropertyChanged}" Padding="4" Margin="0,2,0,8" />

@@ -8,7 +8,7 @@ namespace TestingSystem.Views;
 public partial class LoginWindow : Window
 {
     private readonly AppServices _services;
-    private readonly Action<User> _onLoggedIn;   // маршрутизация по ролям (App.ShowWorkspace)
+    private readonly Action<User> _onLoggedIn;   // маршрутизація за ролями (App.ShowWorkspace)
     private bool _registerMode;
 
     public LoginWindow(AppServices services, Action<User> onLoggedIn)
@@ -18,7 +18,7 @@ public partial class LoginWindow : Window
         _onLoggedIn = onLoggedIn;
 
         Settings.Init(services.Localization, services.Theme);
-        GroupCombo.ItemsSource = services.Groups.GetAll();   // список учебных групп для регистрации
+        GroupCombo.ItemsSource = services.Groups.GetAll();   // список навчальних груп для реєстрації
 
         services.Localization.LanguageChanged += OnLanguageChanged;
         Closed += (_, _) => services.Localization.LanguageChanged -= OnLanguageChanged;
@@ -75,7 +75,7 @@ public partial class LoginWindow : Window
             ErrorText.Text = loc["Err_InvalidCredentials"]; return;
         }
 
-        _onLoggedIn(user);   // сначала открываем кабинет,
-        Close();             // затем закрываем окно входа
+        _onLoggedIn(user);   // спочатку відкриваємо кабінет,
+        Close();             // потім закриваємо вікно входу
     }
 }

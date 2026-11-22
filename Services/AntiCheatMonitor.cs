@@ -12,9 +12,9 @@ public sealed class ViolationEventArgs : EventArgs
 }
 
 /// <summary>
-/// Античит: фиксирует уход фокуса с окна теста (Alt+Tab, клик по другому окну) и сворачивание.
-/// Превышение таймера обрабатывает TestSessionController. Окна-диалоги самого приложения
-/// (выбор файла, подтверждение) нужно оборачивать в Suspend(), иначе они посчитаются нарушением.
+/// Античит: фіксує втрату фокусу вікном тесту (Alt+Tab, клік по іншому вікну) і згортання.
+/// Перевищення таймера обробляє TestSessionController. Вікна-діалоги самого застосунку
+/// (вибір файлу, підтвердження) потрібно обгортати в Suspend(), інакше вони вважатимуться порушенням.
 /// </summary>
 public sealed class AntiCheatMonitor : IDisposable
 {
@@ -31,7 +31,7 @@ public sealed class AntiCheatMonitor : IDisposable
     {
         _window = window;
         MaxViolations = maxViolations;
-        _window.Deactivated += OnDeactivated;   // срабатывает и при Alt+Tab, и при сворачивании
+        _window.Deactivated += OnDeactivated;   // спрацьовує і при Alt+Tab, і при згортанні
     }
 
     private void OnDeactivated(object? sender, EventArgs e)
@@ -45,7 +45,7 @@ public sealed class AntiCheatMonitor : IDisposable
         if (Violations >= MaxViolations) LimitReached?.Invoke(this, EventArgs.Empty);
     }
 
-    /// <summary>Временно отключает учёт (на время собственных диалогов): using (monitor.Suspend()) { ... }</summary>
+    /// <summary>Тимчасово вимикає облік (на час власних діалогів): using (monitor.Suspend()) { ... }</summary>
     public IDisposable Suspend()
     {
         _suspendDepth++;

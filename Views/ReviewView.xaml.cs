@@ -34,12 +34,14 @@ public class ReviewItem : ViewModelBase
     public string Note { get => _note; set => SetProperty(ref _note, value ?? ""); }
 }
 
-/// <summary>Проверка работ со статусом PendingTeacherReview: просмотр ответов/файлов, выставление баллов и комментариев.</summary>
+/// <summary>Перевірка робіт зі статусом PendingTeacherReview: перегляд відповідей/файлів, виставлення балів і коментарів.</summary>
 public partial class ReviewView : UserControl
 {
     private readonly AppServices _s;
     private Result? _current;
     private List<ReviewItem> _items = new();
+    private IReadOnlyList<ResultRow> _pendingRows = Array.Empty<ResultRow>();
+    private bool _filtering;   // при перефильтрации не перезагружаем правую часть (иначе потеряются введённые баллы)
 
     public ReviewView(AppServices services)
     {
@@ -59,13 +61,53 @@ public partial class ReviewView : UserControl
 
     private void Reload()
     {
-        // Только работы по тестам, которыми пользователь управляет
+        // Лише роботи з тестів, якими користувач керує
         var manageable = _s.Tests.GetAll().Where(_s.Auth.CanManage).Select(t => t.Id).ToHashSet();
         var pending = _s.Results.GetPendingReview().Where(r => manageable.Contains(r.TestId)).ToList();
 
-        PendingGrid.ItemsSource = new ResultRowFactory(_s).Build(pending);
+        _pendingRows = new ResultRowFactory(_s).Build(pending);
+        FillGroupFilter();
+        ApplyFilter(keepSelection: false);
         EmptyText.Visibility = pending.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         ClearDetails();
+    }
+
+    private void FillGroupFilter()
+    {
+        int? selectedId = (GroupFilter.SelectedItem as Group)?.Id;
+        var groups = new List<Group> { new() { Id = 0, Name = _s.Localization["Filter_AllGroups"] } };
+        groups.AddRange(_s.Groups.GetAll());
+
+        _filtering = true;
+        GroupFilter.ItemsSource = groups;
+        GroupFilter.SelectedItem = groups.FirstOrDefault(g => g.Id == selectedId) ?? groups[0];
+        _filtering = false;
+    }
+
+    private void Search_Changed(object sender, TextChangedEventArgs e) => ApplyFilter();
+    private void GroupFilter_Changed(object sender, SelectionChangedEventArgs e) { if (!_filtering) ApplyFilter(); }
+
+    /// <summary>Поиск по студенту / тесту / группе + фильтр по группе.</summary>
+    private void ApplyFilter(bool keepSelection = true)
+    {
+        if (GroupFilter.SelectedItem is not Group group) return;
+        string q = SearchBox.Text.Trim();
+
+        var filtered = _pendingRows.Where(r =>
+            (group.Id == 0 || r.Group == group.Name) &&
+            (q.Length == 0
+             || r.Student.Contains(q, StringComparison.OrdinalIgnoreCase)
+             || r.Test.Contains(q, StringComparison.OrdinalIgnoreCase)
+             || r.Group.Contains(q, StringComparison.OrdinalIgnoreCase))).ToList();
+
+        int? selectedId = keepSelection ? (PendingGrid.SelectedItem as ResultRow)?.Source.Id : null;
+        _filtering = true;
+        PendingGrid.ItemsSource = filtered;
+        PendingGrid.SelectedItem = filtered.FirstOrDefault(r => r.Source.Id == selectedId);
+        _filtering = false;
+
+        // выбранная работа выпала из фильтра — убираем правую панель
+        if (selectedId != null && PendingGrid.SelectedItem is null) ClearDetails();
     }
 
     private void ClearDetails()
@@ -80,17 +122,18 @@ public partial class ReviewView : UserControl
 
     private void PendingGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (_filtering) return;
         if (PendingGrid.SelectedItem is not ResultRow row) return;
 
         var loc = _s.Localization;
-        _current = _s.Results.GetById(row.Source.Id);       // свежая копия из хранилища
+        _current = _s.Results.GetById(row.Source.Id);       // свіжа копія зі сховища
         if (_current is null) { ClearDetails(); return; }
 
         HeaderText.Text = $"{row.Student} — {row.Test}";
         HintText.Visibility = Visibility.Collapsed;
         CommentBox.Text = _current.TeacherComment ?? "";
 
-        // Проверяем вручную только те ответы, что не оценены автоматически
+        // Перевіряємо вручну лише ті відповіді, що не оцінені автоматично
         _items = _current.Details.Where(d => !d.IsGraded).Select(d =>
         {
             bool isFile = d.QuestionType == QuestionType.FileUpload;
@@ -119,7 +162,7 @@ public partial class ReviewView : UserControl
         if ((sender as FrameworkElement)?.DataContext is not ReviewItem item) return;
         var loc = _s.Localization;
 
-        // Безопасность: открываем только файлы из белого списка расширений (ученик не мог загрузить .exe/.bat)
+        // Безпека: відкриваємо лише файли з білого списку розширень (учень не міг завантажити .exe/.bat)
         if (!File.Exists(item.FilePath) || !AppFiles.IsAllowedUpload(item.FilePath))
         {
             MessageBox.Show(loc["Err_FileOpen"]); return;
@@ -172,7 +215,7 @@ public partial class ReviewView : UserControl
         if (_current is null) return;
         var loc = _s.Localization;
 
-        // 1. Валидация всех баллов (0..max) до применения
+        // 1. Валідація всіх балів (0..max) до застосування
         var parsed = new List<(ReviewItem Item, double Score)>();
         foreach (var item in _items)
         {
@@ -185,7 +228,7 @@ public partial class ReviewView : UserControl
             parsed.Add((item, score));
         }
 
-        // 2. Применяем баллы и завершаем проверку: PendingTeacherReview -> Completed
+        // 2. Застосовуємо бали та завершуємо перевірку: PendingTeacherReview -> Completed
         foreach (var (item, score) in parsed)
             _s.Grading.ApplyManualScore(item.Detail, score, item.Note);
 

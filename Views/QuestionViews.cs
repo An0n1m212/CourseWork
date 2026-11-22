@@ -10,7 +10,7 @@ using TestingSystem.Services;
 
 namespace TestingSystem.Views;
 
-/// <summary>Представление вопроса одного типа: умеет показать сохранённый ответ и считать новый.</summary>
+/// <summary>Подання питання одного типу: уміє показати збережену відповідь і зчитати нову.</summary>
 public interface IQuestionView
 {
     FrameworkElement Element { get; }
@@ -19,9 +19,9 @@ public interface IQuestionView
 }
 
 /// <summary>
-/// ПАТТЕРН «ФАБРИКА»: по типу вопроса создаёт нужный UI (Radio / CheckBox / TextBox / сопоставление /
-/// сортировка / загрузка файла). Окно теста не знает деталей — оно работает с IQuestionView.
-/// Новый тип вопроса = новый класс + одна строка в этом switch.
+/// ПАТЕРН «ФАБРИКА»: за типом питання створює потрібний UI (Radio / CheckBox / TextBox / зіставлення /
+/// сортування / завантаження файлу). Вікно тесту не знає деталей — воно працює з IQuestionView.
+/// Новий тип питання = новий клас + один рядок у цьому switch.
 /// </summary>
 public static class QuestionViewFactory
 {
@@ -110,12 +110,12 @@ internal sealed class MatchingView : IQuestionView
         _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(24) });
         _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-        // Правые части перемешиваются — иначе порядок подсказывал бы ответ
+        // Праві частини перемішуються — інакше порядок підказував би відповідь
         var rng = new Random();
         var options = rq.Answers.Select(a => new RightOption(a.Id, a.CorrectPairText)).OrderBy(_ => rng.Next()).ToList();
 
         int row = 0;
-        foreach (var left in rq.Answers)       // слева — элементы в порядке OrderIndex
+        foreach (var left in rq.Answers)       // ліворуч — елементи в порядку OrderIndex
         {
             _grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
@@ -142,7 +142,7 @@ internal sealed class MatchingView : IQuestionView
         }
     }
 
-    /// <summary>i-й элемент = Id варианта, чья правая часть выбрана для i-го левого элемента (0 — не выбрано).</summary>
+    /// <summary>i-й елемент = Id варіанта, чия права частина вибрана для i-го лівого елемента (0 — не вибрано).</summary>
     public StudentAnswerDetail Read() => new()
     {
         QuestionId = _questionId,
@@ -163,8 +163,8 @@ internal sealed class SequenceView : IQuestionView
     public SequenceView(RuntimeQuestion rq, ILocalizationService loc)
     {
         _questionId = rq.Source.Id;
-        _items = new ObservableCollection<Answer>(rq.Answers);   // уже перемешаны сервисом
-        _list.ItemsSource = _items;                              // привязываем один раз; дальше только Move
+        _items = new ObservableCollection<Answer>(rq.Answers);   // вже перемішані сервісом
+        _list.ItemsSource = _items;                              // прив'язуємо один раз; далі лише Move
 
         var up = new Button { Content = "▲", Width = 40, Margin = new Thickness(0, 0, 0, 6), ToolTip = loc["Hint_MoveUp"] };
         var down = new Button { Content = "▼", Width = 40, ToolTip = loc["Hint_MoveDown"] };
@@ -250,13 +250,13 @@ internal sealed class FileUploadView : IQuestionView
             Filter = "Allowed files|" + string.Join(";", AppFiles.AllowedUploadExtensions.Select(e => "*" + e))
         };
 
-        // Диалог — окно самого приложения: на время его показа античит не должен считать это нарушением
+        // Діалог — вікно самого застосунку: на час його показу античит не повинен вважати це порушенням
         bool? ok;
         using (_monitor.Suspend()) ok = dialog.ShowDialog();
         if (ok != true) return;
 
         var info = new FileInfo(dialog.FileName);
-        if (!AppFiles.IsAllowedUpload(info.FullName)) { _error.Text = _loc["Err_FileType"]; return; }   // безопасность: whitelist расширений
+        if (!AppFiles.IsAllowedUpload(info.FullName)) { _error.Text = _loc["Err_FileType"]; return; }   // безпека: whitelist розширень
         if (info.Length > AppFiles.MaxUploadBytes) { _error.Text = _loc["Err_FileTooBig"]; return; }
 
         try { _path = AppFiles.CopyIn("uploads", info.FullName, "work"); }

@@ -6,7 +6,7 @@ public interface IGroupRepository
 {
     IReadOnlyList<Group> GetAll();
     Group? GetById(int id);
-    /// <summary>Создаёт (Id == 0) или обновляет группу.</summary>
+    /// <summary>Створює (Id == 0) або оновлює групу.</summary>
     Group Save(Group group);
     void Delete(int id);
 }

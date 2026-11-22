@@ -94,6 +94,7 @@ public abstract class BusyViewModelBase : ViewModelBase
         }
         catch (Exception ex)
         {
+            StatusMessage = string.Empty;   // не залишаємо «AI працює...», якщо запит упав (наприклад, немає інтернету)
             ErrorMessage = AiErrorFormatter.Describe(Loc, ex);
         }
         finally

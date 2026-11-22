@@ -6,5 +6,5 @@ public enum QuestionType { SingleChoice, MultipleChoice, TextAnswer, Matching, S
 
 public enum TextEvaluationType { AutoExactMatch, AutoContains, ManualTeacherReview }
 
-/// <summary>Статус сессии/результата (конечный автомат описан в TestSessionController).</summary>
+/// <summary>Статус сесії/результату (кінцевий автомат описаний у TestSessionController).</summary>
 public enum ResultStatus { InProgress, PendingTeacherReview, Completed, Expired }

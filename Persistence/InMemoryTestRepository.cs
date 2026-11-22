@@ -3,7 +3,7 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Persistence;
 
-/// <summary>Тесты в памяти. Отдаёт и принимает копии; ключи присваивает сама, как БД с автоинкрементом.</summary>
+/// <summary>Тести в пам'яті. Віддає й приймає копії; ключі присвоює сама, як БД з автоінкрементом.</summary>
 public class InMemoryTestRepository : ITestRepository
 {
     private readonly Dictionary<int, Test> _tests = new();

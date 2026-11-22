@@ -11,7 +11,7 @@
                 <ColumnDefinition Width="1.2*" />
             </Grid.ColumnDefinitions>
 
-            <!-- ============ Левая колонка: профиль + безопасность ============ -->
+            <!-- ============ Ліва колонка: профіль + безпека ============ -->
             <StackPanel Grid.Column="0">
                 <Border Style="{StaticResource CardStyle}">
                     <StackPanel>
@@ -63,10 +63,10 @@
                 </Border>
             </StackPanel>
 
-            <!-- ============ Правая колонка: статистика (зависит от роли) ============ -->
+            <!-- ============ Права колонка: статистика (залежить від ролі) ============ -->
             <StackPanel Grid.Column="2">
 
-                <!-- Блок статистики ученика -->
+                <!-- Блок статистики учня -->
                 <StackPanel x:Name="StudentPanel">
                     <Border Style="{StaticResource CardStyle}">
                         <StackPanel>
@@ -108,7 +108,7 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Блок статистики учителя и админа -->
+                <!-- Блок статистики вчителя та адміністратора -->
                 <StackPanel x:Name="TeacherPanel" Visibility="Collapsed">
                     <Border Style="{StaticResource CardStyle}">
                         <StackPanel>

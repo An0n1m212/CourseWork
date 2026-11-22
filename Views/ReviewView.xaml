@@ -4,19 +4,29 @@
              xmlns:loc="clr-namespace:TestingSystem.Infrastructure">
     <Grid Margin="16">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="480" />
             <ColumnDefinition Width="16" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <DockPanel Grid.Column="0">
             <TextBlock DockPanel.Dock="Top" Text="{loc:T Tab_Review}" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" />
+
+            <TextBlock DockPanel.Dock="Top" Text="{loc:T Lbl_Search}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" />
+            <Grid DockPanel.Dock="Top" Margin="0,2,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" /><ColumnDefinition Width="8" /><ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="SearchBox" Grid.Column="0" Padding="4" TextChanged="Search_Changed" />
+                <ComboBox x:Name="GroupFilter" Grid.Column="2" DisplayMemberPath="Name" Padding="4" loc:ComboBoxSearch.Enabled="True" SelectionChanged="GroupFilter_Changed" />
+            </Grid>
             <TextBlock x:Name="EmptyText" DockPanel.Dock="Top" Text="{loc:T Msg_NothingToReview}" Visibility="Collapsed"
                        Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,8" />
             <DataGrid x:Name="PendingGrid" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                       SelectionMode="Single" CanUserAddRows="False" SelectionChanged="PendingGrid_SelectionChanged">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{loc:T Col_Student}" Binding="{Binding Student}" Width="*" />
+                    <DataGridTextColumn Header="{loc:T Col_Group}" Binding="{Binding Group}" Width="85" />
                     <DataGridTextColumn Header="{loc:T Col_Test}" Binding="{Binding Test}" Width="*" />
                     <DataGridTextColumn Header="{loc:T Col_Date}" Binding="{Binding Date, StringFormat=dd.MM HH:mm}" Width="90" />
                 </DataGrid.Columns>

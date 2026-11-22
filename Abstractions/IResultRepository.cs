@@ -2,10 +2,10 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Abstractions;
 
-/// <summary>Результаты и сессии тестирования (сессия — «попытка», результат — её итог).</summary>
+/// <summary>Результати та сесії тестування (сесія — «спроба», результат — її підсумок).</summary>
 public interface IResultRepository
 {
-    Result SaveResult(Result result);              // insert/update
+    Result SaveResult(Result result);              // вставка/оновлення
     Result? GetById(int id);
     IReadOnlyList<Result> GetAll();
     IReadOnlyList<Result> GetByStudent(int studentId);
@@ -13,7 +13,7 @@ public interface IResultRepository
     IReadOnlyList<Result> GetPendingReview();
     void DeleteResult(int id);
 
-    TestSession SaveSession(TestSession session);  // insert/update
+    TestSession SaveSession(TestSession session);  // вставка/оновлення
     TestSession? GetSession(int id);
     IReadOnlyList<TestSession> GetSessions(int studentId, int testId);
 }

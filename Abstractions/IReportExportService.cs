@@ -2,7 +2,7 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Abstractions;
 
-/// <summary>Экспорт данных. Реализация (CSV, XLSX, PDF) скрыта за интерфейсом и заменяема.</summary>
+/// <summary>Експорт даних. Реалізація (CSV, XLSX, PDF) прихована за інтерфейсом і є замінною.</summary>
 public interface IReportExportService
 {
     void ExportResultsCsv(IReadOnlyList<ResultExportRow> rows, string path);

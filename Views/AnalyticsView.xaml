@@ -10,16 +10,27 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- фильтры и экспорт -->
-        <WrapPanel Grid.Row="0" Margin="0,0,0,10">
-            <TextBlock Text="{loc:T Lbl_Group}" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <ComboBox x:Name="GroupCombo" Width="160" DisplayMemberPath="Name" Margin="0,0,16,0" SelectionChanged="Filter_Changed" />
-            <TextBlock Text="{loc:T Lbl_Test}" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <ComboBox x:Name="TestCombo" Width="260" DisplayMemberPath="Title" Margin="0,0,24,0" SelectionChanged="Filter_Changed" />
-            <Button Content="{loc:T Btn_ExportExcel}" Padding="12,5" Margin="0,0,8,0" Click="ExportExcel_Click" />
-            <Button Content="{loc:T Btn_ExportCsv}" Padding="12,5" Margin="0,0,8,0" Click="ExportCsv_Click" />
-            <Button Content="{loc:T Btn_Report}" Padding="12,5" Click="Report_Click" />
-        </WrapPanel>
+        <!-- фільтри та експорт -->
+        <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="True">
+            <!-- кнопки экспорта: справа -->
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                <Button Content="{loc:T Btn_ExportExcel}" Padding="10,5" Margin="0,0,6,0" Click="ExportExcel_Click" />
+                <Button Content="{loc:T Btn_ExportCsv}" Padding="10,5" Margin="0,0,6,0" Click="ExportCsv_Click" />
+                <Button Content="{loc:T Btn_Report}" Padding="10,5" Click="Report_Click" />
+            </StackPanel>
+
+            <!-- фильтры: слева -->
+            <WrapPanel VerticalAlignment="Center">
+                <TextBlock Text="{loc:T Lbl_Group}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox x:Name="GroupCombo" Width="130" DisplayMemberPath="Name" Margin="0,0,12,0"
+                          loc:ComboBoxSearch.Enabled="True" SelectionChanged="Filter_Changed" />
+                <TextBlock Text="{loc:T Lbl_Test}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox x:Name="TestCombo" Width="160" DisplayMemberPath="Title" Margin="0,0,12,0"
+                          loc:ComboBoxSearch.Enabled="True" SelectionChanged="Filter_Changed" />
+                <TextBlock Text="{loc:T Lbl_Search}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBox x:Name="SearchBox" Width="200" Padding="4" TextChanged="Search_Changed" />
+            </WrapPanel>
+        </DockPanel>
 
         <DataGrid x:Name="ResultsGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   CanUserAddRows="False" SelectionMode="Single" MouseDoubleClick="ResultsGrid_DoubleClick">
@@ -29,14 +40,14 @@
                 <DataGridTextColumn Header="{loc:T Col_Test}" Binding="{Binding Test}" Width="*" />
                 <DataGridTextColumn Header="{loc:T Col_Points}" Binding="{Binding Points}" Width="80" />
                 <DataGridTextColumn Header="%" Binding="{Binding Percent, StringFormat=0.#}" Width="60" />
-                <DataGridTextColumn Header="{loc:T Col_Passed}" Binding="{Binding PassedText}" Width="70" />
+                <DataGridTextColumn Header="{loc:T Col_Passed}" Binding="{Binding PassedText}" Width="90" />
                 <DataGridTextColumn Header="{loc:T Col_Status}" Binding="{Binding StatusText}" Width="150" />
                 <DataGridTextColumn Header="{loc:T Col_Date}" Binding="{Binding Date, StringFormat=dd.MM.yyyy HH:mm}" Width="130" />
-                <DataGridTextColumn Header="{loc:T Col_Violations}" Binding="{Binding Violations}" Width="90" />
+                <DataGridTextColumn Header="{loc:T Col_Violations}" Binding="{Binding Violations}" Width="115" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- сложные вопросы -->
+        <!-- складні питання -->
         <StackPanel Grid.Row="2" Margin="0,14,0,6">
             <TextBlock Text="{loc:T Hdr_HardQuestions}" FontSize="16" FontWeight="Bold" />
             <TextBlock Text="{loc:T Hint_HardQuestions}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" />
@@ -44,9 +55,13 @@
 
         <DataGrid x:Name="HardGrid" Grid.Row="3" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
                   CanUserAddRows="False">
-            <!-- Вопросы, на которые чаще всего отвечают неверно (IsHard), подсвечиваются -->
+            <!-- Питання, на які найчастіше відповідають неправильно (IsHard), підсвічуються -->
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                    <!-- Явний прозорий фон обов'язковий: без нього рядки беруть фон із базового стилю,
+                         зафіксованого на момент створення вікна (світла тема). Після перемикання на темну
+                         тему вони лишаються білими, а текст стає білим — рядки «зникають». -->
+                    <Setter Property="Background" Value="Transparent" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsHard}" Value="True">
                             <Setter Property="Background" Value="{DynamicResource HardRowBrush}" />

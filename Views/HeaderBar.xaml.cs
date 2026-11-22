@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace TestingSystem.Views;
 
-/// <summary>Верхняя панель: пользователь (аватар, ФИО, роль), язык, тема, индикатор подключения, выход.</summary>
+/// <summary>Верхня панель: користувач (аватар, ПІБ, роль), мова, тема, індикатор підключення, вихід.</summary>
 public partial class HeaderBar : UserControl
 {
     private AppServices? _services;

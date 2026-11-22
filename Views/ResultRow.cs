@@ -2,7 +2,7 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Views;
 
-/// <summary>Строка таблицы результатов (плоская проекция для DataGrid).</summary>
+/// <summary>Рядок таблиці результатів (пласка проєкція для DataGrid).</summary>
 public record ResultRow(
     Result Source, string Student, string Group, string Test, string Points, double Percent,
     bool Passed, string PassedText, ResultStatus Status, string StatusText, DateTime Date, int Violations)
@@ -11,7 +11,7 @@ public record ResultRow(
         => new(Student, Group, Test, Source.TotalScore, Source.MaxScore, Percent, Passed, Status, Date, Violations);
 }
 
-/// <summary>Собирает ResultRow из Result, подтягивая имена учеников, групп и тестов.</summary>
+/// <summary>Збирає ResultRow з Result, підтягуючи імена учнів, груп і тестів.</summary>
 public class ResultRowFactory
 {
     private readonly AppServices _s;

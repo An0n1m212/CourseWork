@@ -9,12 +9,15 @@ public interface IUserRepository
     IReadOnlyList<User> GetAll();
     IReadOnlyList<User> GetStudents();
 
-    /// <summary>Присваивает Id; бросает InvalidOperationException, если логин занят.</summary>
+    /// <summary>Присвоює Id; кидає InvalidOperationException, якщо логін зайнятий.</summary>
     User Create(User user);
 
     bool UpdateProfile(int userId, string fullName, string email, string? avatarPath);
 
-    /// <summary>Compare-and-swap: хэш меняется только если сохранённый хэш равен oldPasswordHash.</summary>
+    /// <summary>Меняет группу пользователя (UPDATE Users SET GroupId=@groupId WHERE Id=@id).</summary>
+    bool UpdateGroup(int userId, int? groupId);
+
+    /// <summary>Compare-and-swap: хеш змінюється лише якщо збережений хеш дорівнює oldPasswordHash.</summary>
     bool ChangePassword(int userId, string oldPasswordHash, string newPasswordHash);
 
     void Delete(int id);

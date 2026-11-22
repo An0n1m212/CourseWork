@@ -3,10 +3,10 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Persistence;
 
-/// <summary>Пользователи в памяти. Как и БД, отдаёт КОПИИ записей.</summary>
+/// <summary>Користувачі в пам'яті. Як і БД, віддає КОПІЇ записів.</summary>
 public class InMemoryUserRepository : IUserRepository
 {
-    private readonly Dictionary<int, User> _users = new();   // «таблица Users»
+    private readonly Dictionary<int, User> _users = new();   // «таблиця Users»
     private readonly object _lock = new();
     private int _nextId;
 
@@ -38,9 +38,9 @@ public class InMemoryUserRepository : IUserRepository
     }
 
     /// <summary>
-    /// СЕЙЧАС (InMemory): правим сохранённую запись в словаре. В SQLite/EF Core тот же вызов станет:
+    /// ЗАРАЗ (InMemory): правимо збережений запис у словнику. У SQLite/EF Core той самий виклик стане:
     ///   UPDATE Users SET FullName=@fullName, Email=@email, AvatarPath=@avatar WHERE Id=@id
-    /// (EF Core: загрузить сущность, поменять поля, SaveChanges()). Сервисы и UI не меняются.
+    /// (EF Core: завантажити сутність, змінити поля, SaveChanges()). Сервіси та UI не змінюються.
     /// </summary>
     public bool UpdateProfile(int userId, string fullName, string email, string? avatarPath)
     {
@@ -56,8 +56,8 @@ public class InMemoryUserRepository : IUserRepository
 
     /// <summary>
     /// Compare-and-swap. SQL-аналог:
-    ///   UPDATE Users SET PasswordHash=@new WHERE Id=@id AND PasswordHash=@old   -- 1 строка = успех
-    /// Проверку СТАРОГО ПАРОЛЯ выполняет AuthService (хэши с солью напрямую не сравнить).
+    ///   UPDATE Users SET PasswordHash=@new WHERE Id=@id AND PasswordHash=@old   -- 1 рядок = успіх
+    /// Перевірку СТАРОГО ПАРОЛЯ виконує AuthService (хеші з сіллю напряму не порівняти).
     /// </summary>
     public bool ChangePassword(int userId, string oldPasswordHash, string newPasswordHash)
     {
@@ -65,6 +65,16 @@ public class InMemoryUserRepository : IUserRepository
         {
             if (!_users.TryGetValue(userId, out var stored) || stored.PasswordHash != oldPasswordHash) return false;
             stored.PasswordHash = newPasswordHash;
+            return true;
+        }
+    }
+
+    public bool UpdateGroup(int userId, int? groupId)
+    {
+        lock (_lock)
+        {
+            if (!_users.TryGetValue(userId, out var stored)) return false;
+            stored.GroupId = groupId;
             return true;
         }
     }

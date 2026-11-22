@@ -9,15 +9,15 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="320" />
+            <ColumnDefinition Width="334" />
             <ColumnDefinition Width="16" />
-            <ColumnDefinition Width="270" />
+            <ColumnDefinition Width="284" />
             <ColumnDefinition Width="16" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- ============ настройки теста ============ -->
-        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+        <!-- ============ налаштування тесту ============ -->
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
             <StackPanel>
                 <TextBlock Text="{loc:T Lbl_TestSettings}" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
 
@@ -51,7 +51,9 @@
 
                 <CheckBox x:Name="RandomQuestionsCheck" Content="{loc:T Chk_RandomQuestions}" Margin="0,2" />
                 <CheckBox x:Name="RandomAnswersCheck" Content="{loc:T Chk_RandomAnswers}" Margin="0,2" />
-                <CheckBox x:Name="ExplanationsCheck" Content="{loc:T Chk_ShowExplanations}" Margin="0,2" IsChecked="True" />
+                <CheckBox x:Name="ExplanationsCheck" Margin="0,2" IsChecked="True">
+                    <TextBlock Text="{loc:T Chk_ShowExplanations}" TextWrapping="Wrap" />
+                </CheckBox>
 
                 <TextBlock Text="{loc:T Lbl_AccessCode}" Margin="0,10,0,0" />
                 <TextBox x:Name="AccessCodeBox" Padding="4" Margin="0,2,0,8" />
@@ -62,16 +64,24 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- ============ список вопросов ============ -->
+        <!-- ============ список питань ============ -->
         <DockPanel Grid.Column="2">
             <TextBlock DockPanel.Dock="Top" Text="{loc:T Lbl_QuestionsList}" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" TextWrapping="Wrap" />
-            <ListBox x:Name="QuestionsList" DisplayMemberPath="Text"
+            <ListBox x:Name="QuestionsList"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     SelectionChanged="QuestionsList_SelectionChanged" />
+                     SelectionChanged="QuestionsList_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </DockPanel>
 
-        <!-- ============ редактор вопроса ============ -->
-        <ScrollViewer Grid.Column="4" VerticalScrollBarVisibility="Auto">
+        <!-- ============ редактор питання ============ -->
+        <!-- Правий відступ: стандартна смуга прокрутки малюється поверх правого краю,
+             тому вміст трохи відсунуто, щоб смуга не накривала поля та кнопки. -->
+        <ScrollViewer Grid.Column="4" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
             <StackPanel>
                 <TextBlock Text="{loc:T Lbl_QuestionEditor}" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
 
@@ -105,8 +115,14 @@
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="{loc:T Lbl_Media}" />
                         <DockPanel Margin="0,2,0,0">
-                            <Button DockPanel.Dock="Right" Content="✕" Width="30" Margin="4,0,0,0" Click="ClearMedia_Click" />
-                            <Button DockPanel.Dock="Right" Content="{loc:T Btn_Browse}" Padding="10,3" Margin="4,0,0,0" Click="BrowseMedia_Click" />
+                            <Button DockPanel.Dock="Right" Width="30" Padding="0" Margin="4,0,0,0" VerticalAlignment="Stretch"
+                                    Click="ClearMedia_Click" ToolTip="{loc:T Btn_RemoveFile}">
+                                <Path Data="M 0,0 L 10,10 M 10,0 L 0,10" StrokeThickness="1.5" Width="10" Height="10"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                            </Button>
+                            <Button DockPanel.Dock="Right" Content="{loc:T Btn_Browse}" Padding="10,3" Margin="4,0,0,0" VerticalAlignment="Stretch"
+                                    Click="BrowseMedia_Click" />
                             <TextBox x:Name="MediaBox" IsReadOnly="True" Padding="4" />
                         </DockPanel>
                     </StackPanel>

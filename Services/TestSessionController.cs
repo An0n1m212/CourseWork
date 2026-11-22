@@ -4,11 +4,11 @@ using TestingSystem.Models;
 
 namespace TestingSystem.Services;
 
-/// <summary>Вопрос в том виде, в каком его видит ученик (порядок вариантов уже перемешан, если нужно).</summary>
+/// <summary>Питання в тому вигляді, в якому його бачить учень (порядок варіантів уже перемішано, якщо потрібно).</summary>
 public sealed class RuntimeQuestion
 {
     public Question Source { get; }
-    /// <summary>Варианты в порядке показа. Для Matching — левые элементы по OrderIndex, правые перемешиваются во View.</summary>
+    /// <summary>Варіанти в порядку показу. Для Matching — ліві елементи за OrderIndex, праві перемішуються у View.</summary>
     public IReadOnlyList<Answer> Answers { get; }
 
     public RuntimeQuestion(Question source, IReadOnlyList<Answer> answers)
@@ -19,15 +19,15 @@ public sealed class RuntimeQuestion
 }
 
 /// <summary>
-/// Управляет одной попыткой тестирования: таймер, ответы, нарушения и ПЕРЕХОДЫ СОСТОЯНИЙ сессии.
+/// Керує однією спробою тестування: таймер, відповіді, порушення та ПЕРЕХОДИ СТАНІВ сесії.
 ///
-///   [создана] --Begin()--> InProgress
-///   InProgress --Submit()--> Completed              (все ответы проверены автоматически)
-///   InProgress --Submit()--> PendingTeacherReview   (есть ответы, требующие ручной проверки)
-///   InProgress --таймер истёк (Expire())--> Expired (сессия); результат: Expired либо PendingTeacherReview
-///   PendingTeacherReview --проверка учителем--> Completed (см. TestSessionService.CompleteReview)
+///   [створена] --Begin()--> InProgress
+///   InProgress --Submit()--> Completed              (усі відповіді перевірено автоматично)
+///   InProgress --Submit()--> PendingTeacherReview   (є відповіді, що потребують ручної перевірки)
+///   InProgress --таймер сплив (Expire())--> Expired (сесія); результат: Expired або PendingTeacherReview
+///   PendingTeacherReview --перевірка вчителем--> Completed (див. TestSessionService.CompleteReview)
 ///
-/// Из конечных состояний назад вернуться нельзя: после Complete() все методы изменения состояния игнорируются.
+/// З кінцевих станів назад повернутися не можна: після Complete() усі методи зміни стану ігноруються.
 /// </summary>
 public sealed class TestSessionController
 {
@@ -48,7 +48,7 @@ public sealed class TestSessionController
     public bool HasTimeLimit => Test.TimeLimitMinutes > 0;
     public bool IsFinished => Session.Status != ResultStatus.InProgress;
 
-    /// <summary>Оставшееся время (null — без ограничения).</summary>
+    /// <summary>Залишок часу (null — без обмеження).</summary>
     public TimeSpan? Remaining
     {
         get
@@ -61,10 +61,10 @@ public sealed class TestSessionController
 
     public int AnsweredCount => _answers.Values.Count(AnswerState.HasAnswer);
 
-    public event EventHandler? Tick;                       // каждую секунду
-    public event EventHandler? TimeWarning;                // осталась последняя минута (один раз)
-    public event EventHandler? BeforeComplete;             // перед подсчётом: View сохраняет текущий ответ
-    public event EventHandler<Result>? Finished;           // попытка завершена (отправка или таймаут)
+    public event EventHandler? Tick;                       // щосекунди
+    public event EventHandler? TimeWarning;                // залишилася остання хвилина (один раз)
+    public event EventHandler? BeforeComplete;             // перед підрахунком: View зберігає поточну відповідь
+    public event EventHandler<Result>? Finished;           // спробу завершено (надсилання або таймаут)
 
     public TestSessionController(TestSession session, Test test, IReadOnlyList<RuntimeQuestion> questions,
                                  IResultRepository results, GradingEngine grading)
@@ -76,7 +76,7 @@ public sealed class TestSessionController
         _grading = grading;
     }
 
-    /// <summary>Старт: фиксируем время, считаем дедлайн и запускаем таймер.</summary>
+    /// <summary>Старт: фіксуємо час, рахуємо дедлайн і запускаємо таймер.</summary>
     public void Begin()
     {
         Session.StartTime = DateTime.Now;
@@ -101,7 +101,7 @@ public sealed class TestSessionController
                 _warned = true;
                 TimeWarning?.Invoke(this, EventArgs.Empty);
             }
-            if (left <= TimeSpan.Zero) Expire();           // время вышло -> автоматическая сдача
+            if (left <= TimeSpan.Zero) Expire();           // час вийшов -> автоматичне надсилання
         }
     }
 
@@ -144,7 +144,7 @@ public sealed class TestSessionController
         Session.EndTime = DateTime.Now;
         var result = _grading.BuildResult(Session, Test, _answers, timedOut);
 
-        // Сессия при таймауте остаётся Expired даже если часть ответов ждёт проверки учителем
+        // Сесія при таймауті залишається Expired навіть якщо частина відповідей чекає перевірки вчителем
         Session.Status = timedOut ? ResultStatus.Expired : result.Status;
         _results.SaveSession(Session);
 

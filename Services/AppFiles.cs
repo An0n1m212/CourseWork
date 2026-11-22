@@ -2,10 +2,10 @@ using System.IO;
 
 namespace TestingSystem.Services;
 
-/// <summary>Хранение пользовательских файлов (аватары, медиа вопросов, работы учеников) в %AppData%\TestingSystem.</summary>
+/// <summary>Зберігання користувацьких файлів (аватари, медіа питань, роботи учнів) у %AppData%\TestingSystem.</summary>
 public static class AppFiles
 {
-    /// <summary>Расширения, допустимые для загрузки учеником (исполняемые файлы запрещены — учитель открывает работы).</summary>
+    /// <summary>Розширення, допустимі для завантаження учнем (виконувані файли заборонені — учитель відкриває роботи).</summary>
     public static readonly string[] AllowedUploadExtensions =
         { ".pdf", ".doc", ".docx", ".txt", ".md", ".png", ".jpg", ".jpeg", ".zip", ".rar", ".7z", ".cs", ".py", ".java", ".cpp", ".sql" };
 
@@ -14,7 +14,7 @@ public static class AppFiles
     public static string Root => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TestingSystem");
 
-    /// <summary>Копирует файл в подпапку приложения под уникальным именем и возвращает новый путь.</summary>
+    /// <summary>Копіює файл у підпапку застосунку під унікальним іменем і повертає новий шлях.</summary>
     public static string CopyIn(string subFolder, string sourcePath, string prefix = "f")
     {
         string dir = Path.Combine(Root, subFolder);

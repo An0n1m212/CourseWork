@@ -5,10 +5,10 @@ using TestingSystem.Abstractions;
 namespace TestingSystem.Infrastructure;
 
 /// <summary>
-/// XAML-расширение локализации: Text="{loc:T Login_Title}".
-/// Создаёт привязку к индексатору ILocalizationService, поэтому текст меняется сразу при смене языка.
-/// Service задаётся один раз в Composition Root (App.OnStartup) — это единственное «статическое» место,
-/// нужное только потому, что у XAML-расширений нет доступа к DI.
+/// XAML-розширення локалізації: Text="{loc:T Login_Title}".
+/// Створює прив'язку до індексатора ILocalizationService, тому текст змінюється одразу під час зміни мови.
+/// Service задається один раз у Composition Root (App.OnStartup) — це єдине «статичне» місце,
+/// потрібне лише тому, що в XAML-розширень немає доступу до DI.
 /// </summary>
 public class TExtension : MarkupExtension
 {
