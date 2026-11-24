@@ -1,5 +1,5 @@
-﻿# Testing System v0.8
+﻿# Testing System v0.9
 
-AI-помічник: Mock, OpenAI-сумісний, Anthropic; теми, лекції, тести, підказки оцінок; ключ під DPAPI.
+Release candidate: додано Google Gemini. Увесь код готовий.
 
 Збірка: `dotnet build TestingSystem.csproj` (потрібен .NET 10 SDK, Windows).
