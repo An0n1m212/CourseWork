@@ -1,5 +1,5 @@
-﻿# Testing System v0.9
+﻿# Testing System v1.0
 
-Release candidate: додано Google Gemini. Увесь код готовий.
+Фінал: + docs/AI_PROVIDERS.md.
 
 Збірка: `dotnet build TestingSystem.csproj` (потрібен .NET 10 SDK, Windows).
