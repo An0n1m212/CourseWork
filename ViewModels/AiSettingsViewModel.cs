@@ -1,4 +1,4 @@
-﻿using TestingSystem.Abstractions;
+using TestingSystem.Abstractions;
 using TestingSystem.Infrastructure.Mvvm;
 using TestingSystem.Services.Ai;
 
@@ -65,6 +65,7 @@ public sealed class AiSettingsViewModel : BusyViewModelBase, IDialogViewModel
             new Option<AiProviderKind>(AiProviderKind.Mock, loc["Ai_Provider_Mock"]),
             new Option<AiProviderKind>(AiProviderKind.OpenAiCompatible, loc["Ai_Provider_OpenAi"]),
             new Option<AiProviderKind>(AiProviderKind.Anthropic, loc["Ai_Provider_Anthropic"]),
+            new Option<AiProviderKind>(AiProviderKind.Gemini, loc["Ai_Provider_Gemini"])
         };
 
         var s = store.Current;

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using TestingSystem.Abstractions;
@@ -12,17 +12,17 @@ using TestingSystem.Views;
 
 namespace TestingSystem;
 
-/// <summary>Назва провайдера сховища (індикатор підключення в шапці).</summary>
+/// <summary>Назва поточного провайдера сховища (показується в індикаторі підключення).</summary>
 public sealed record StorageInfo(string Name);
 
-/// <summary>Набір сервісів, доступних вікнам цієї версії.</summary>
+/// <summary>Набір сервісів застосунку: вікна отримують його повністю і працюють лише з інтерфейсами/сервісами.</summary>
 public sealed record AppServices(
     IUserRepository Users,
     IGroupRepository Groups,
     ICategoryRepository Categories,
     ITestRepository Tests,
-    IResultRepository Results,
     ILectureRepository Lectures,
+    IResultRepository Results,
     IAuthService Auth,
     ILocalizationService Localization,
     IThemeService Theme,
@@ -41,14 +41,17 @@ public partial class App : Application, ISessionNavigator
     private ServiceProvider _provider = null!;
     private AppServices _services = null!;
 
-    /// <summary>Composition Root: єдине місце, де вибираються реалізації.</summary>
+    /// <summary>
+    /// ===================== ТОЧКА ВХОДУ / COMPOSITION ROOT / DI =====================
+    /// Єдине місце, де обираються конкретні реалізації.
+    /// </summary>
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
         var sc = new ServiceCollection();
 
-        // ---------- сховище (in-memory) ----------
+        // ---------- СХОВИЩЕ: зараз — оперативна пам'ять ----------
         sc.AddSingleton<IUserRepository, InMemoryUserRepository>();
         sc.AddSingleton<IGroupRepository, InMemoryGroupRepository>();
         sc.AddSingleton<ICategoryRepository, InMemoryCategoryRepository>();
@@ -57,7 +60,16 @@ public partial class App : Application, ISessionNavigator
         sc.AddSingleton<IResultRepository, InMemoryResultRepository>();
         sc.AddSingleton(new StorageInfo("In-Memory"));
 
-        // ---------- сервіси та бізнес-логіка ----------
+        // ---------- ПЕРЕХІД НА SQLite / PostgreSQL / EF Core ----------
+        // Змінюються ЛИШЕ ці реєстрації (класи пишуться на тих самих інтерфейсах), наприклад:
+        //   sc.AddDbContext<AppDbContext>(o => o.UseSqlite("Data Source=testing.db"));  // або UseNpgsql(...)
+        //   sc.AddScoped<IUserRepository,   EfUserRepository>();
+        //   sc.AddScoped<ITestRepository,   EfTestRepository>();
+        //   sc.AddScoped<IResultRepository, EfResultRepository>();  ... і т.д.
+        //   sc.AddSingleton(new StorageInfo("SQLite"));
+        // GradingEngine, TestSessionService, StatisticsService, AuthService і всі вікна залишаються без змін.
+
+        // ---------- сервіси та бізнес-логіка (не залежать від сховища) ----------
         sc.AddSingleton<GradingEngine>();
         sc.AddSingleton<IAuthService, AuthService>();
         sc.AddSingleton<ILocalizationService, LocalizationService>();
@@ -65,38 +77,43 @@ public partial class App : Application, ISessionNavigator
         sc.AddSingleton<TestSessionService>();
         sc.AddSingleton<StatisticsService>();
         sc.AddSingleton<IReportExportService, ReportExportService>();
+
+        // ---------- лекції ----------
         sc.AddSingleton<ILectureService, LectureService>();
 
-        // ---------- AI: взаємозамінні провайдери-стратегії ----------
+        // ---------- AI: провайдери — взаємозамінні стратегії; обирається в налаштуваннях, без змін коду ----------
         sc.AddSingleton(new HttpClient { Timeout = Timeout.InfiniteTimeSpan });   // таймаут задає AiClientRouter
         sc.AddSingleton<IAiSettingsStore, JsonAiSettingsStore>();
-        sc.AddSingleton<IAiProvider, MockAiProvider>();
-        sc.AddSingleton<IAiProvider, OpenAiCompatibleProvider>();
-        sc.AddSingleton<IAiProvider, AnthropicProvider>();
+        sc.AddSingleton<IAiProvider, MockAiProvider>();              // офлайн-демо без ключа
+        sc.AddSingleton<IAiProvider, OpenAiCompatibleProvider>();    // OpenAI, OpenRouter, Ollama, LM Studio...
+        sc.AddSingleton<IAiProvider, AnthropicProvider>();           // Anthropic Messages API
+        sc.AddSingleton<IAiProvider, GeminiProvider>();              // Google Gemini API
         sc.AddSingleton<IAiClient, AiClientRouter>();
         sc.AddSingleton<IAiAssistant, AiAssistant>();
 
-        // ---------- MVVM-інфраструктура ----------
+        // ---------- MVVM-інфраструктура: діалоги, фабрика ViewModel, міст до редактора тестів ----------
         sc.AddSingleton<IDialogService>(_ => new WpfDialogService()
             .Register<LectureEditorViewModel, LectureEditorWindow>()
             .Register<AiSettingsViewModel, AiSettingsWindow>());
         sc.AddSingleton<IViewModelFactory, ViewModelFactory>();
         sc.AddSingleton<ITestEditorLauncher, WpfTestEditorLauncher>();
 
-        // ---------- блокування сеансу після бездіяльності ----------
+        // ---------- блокування сеансу після бездіяльності (кожна залежність — окрема абстракція) ----------
         sc.AddSingleton(new InactivitySettings(Timeout: TimeSpan.FromMinutes(30), MaxUnlockAttempts: 5));
+        //   Для перевірки поставте, наприклад, TimeSpan.FromSeconds(20) — екран блокування з'явиться через 20 секунд.
         sc.AddSingleton<IClock, SystemClock>();
         sc.AddSingleton<IActivitySource, WpfInputActivitySource>();
         sc.AddTransient<ITicker>(_ => new DispatcherTicker(TimeSpan.FromSeconds(5)));
         sc.AddSingleton<IInactivityMonitor, InactivityMonitor>();
         sc.AddSingleton<ILockScreenPresenter, WpfLockScreenPresenter>();
-        sc.AddSingleton<ISessionNavigator>(_ => this);
+        sc.AddSingleton<ISessionNavigator>(_ => this);          // навігацію виконує App
         sc.AddSingleton<ISessionLockService, SessionLockService>();
 
         sc.AddSingleton<AppServices>();
 
         _provider = sc.BuildServiceProvider();
 
+        // Демо-дані (для реальної БД — прибрати або викликати лише для порожньої бази)
         DemoDataSeeder.Seed(
             _provider.GetRequiredService<IUserRepository>(),
             _provider.GetRequiredService<IGroupRepository>(),
@@ -116,7 +133,10 @@ public partial class App : Application, ISessionNavigator
 
     public void ShowLogin() => new LoginWindow(_services, ShowWorkspace).Show();
 
-    /// <summary>ISessionNavigator: примусовий вихід (наприклад, з екрана блокування).</summary>
+    /// <summary>
+    /// ISessionNavigator: примусовий вихід (наприклад, з екрана блокування). Завершує сеанс, показує вхід
+    /// і закриває всі робочі вікна та діалоги — спочатку дочірні, потім решту. Екран блокування закриває сам себе.
+    /// </summary>
     public void NavigateToLogin()
     {
         _services.Auth.Logout();
@@ -130,7 +150,7 @@ public partial class App : Application, ISessionNavigator
         foreach (var window in toClose) window.Close();
     }
 
-    /// <summary>Маршрутизація за роллю: студент - кабінет студента, викладач і адмін - місце викладача.</summary>
+    /// <summary>Маршрутизація за роллю: учень — кабінет учня, вчитель і адмін — робоче місце викладача.</summary>
     private void ShowWorkspace(User user)
     {
         Window w = user.Role == Role.Student
