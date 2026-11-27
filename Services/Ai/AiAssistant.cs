@@ -32,7 +32,6 @@ public sealed class AiAssistant : IAiAssistant
     private string Language => _loc.CurrentLanguage switch
     {
         AppLanguage.UA => "Ukrainian",
-        AppLanguage.RU => "Russian",
         _ => "English"
     };
 

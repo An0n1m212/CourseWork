@@ -1,5 +1,5 @@
-﻿# Testing System v1.0
+﻿# Testing System v1.1
 
-Фінал: + docs/AI_PROVIDERS.md.
+Зміна базового классу (String.cs), на Словник ресурсів (Languages/UA.xaml; Languages/EN.xaml). Додано помітки про не протестованість API від OpenAI, Claude
 
 Збірка: `dotnet build TestingSystem.csproj` (потрібен .NET 10 SDK, Windows).

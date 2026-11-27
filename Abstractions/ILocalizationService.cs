@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace TestingSystem.Abstractions;
 
-public enum AppLanguage { UA, RU, EN }
+public enum AppLanguage { UA, EN }
 
 /// <summary>Локалізація «на льоту»: індексатор + PropertyChanged("Item[]") оновлюють XAML-прив'язки {loc:T Key}.</summary>
 public interface ILocalizationService : INotifyPropertyChanged

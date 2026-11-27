@@ -120,7 +120,7 @@ public partial class TestEditorWindow : Window
 
         TextEvalPanel.Visibility = type == QuestionType.TextAnswer ? Visibility.Visible : Visibility.Collapsed;
         AnswersHeader.Visibility = AnswersPanel.Visibility = hasAnswers ? Visibility.Visible : Visibility.Collapsed;
-        AnswersHeader.Text = _s.Localization[$"AnsHint_{type}"];
+        AnswersHeader.Text = hasAnswers ? _s.Localization[$"AnsHint_{type}"] : string.Empty;
 
         foreach (var slot in _slots)
         {
