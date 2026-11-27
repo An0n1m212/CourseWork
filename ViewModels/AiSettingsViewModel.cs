@@ -37,11 +37,15 @@ public sealed class AiSettingsViewModel : BusyViewModelBase, IDialogViewModel
             if (string.IsNullOrWhiteSpace(BaseUrl) || BaseUrl == oldDefaults.BaseUrl) BaseUrl = newDefaults.BaseUrl;
             if (string.IsNullOrWhiteSpace(Model) || Model == oldDefaults.Model) Model = newDefaults.Model;
             OnPropertyChanged(nameof(IsExternal));
+            OnPropertyChanged(nameof(IsExperimentalProvider));
         }
     }
 
     /// <summary>false для Mock — поля підключення неактуальні.</summary>
     public bool IsExternal => _selectedProvider.Value != AiProviderKind.Mock;
+
+    /// <summary>OpenAI-сумісний та Anthropic не перевірені на реальних API.</summary>
+    public bool IsExperimentalProvider => _selectedProvider.Value is AiProviderKind.OpenAiCompatible or AiProviderKind.Anthropic;
 
     public string BaseUrl { get => _baseUrl; set => SetProperty(ref _baseUrl, value ?? string.Empty); }
     public string Model { get => _model; set => SetProperty(ref _model, value ?? string.Empty); }

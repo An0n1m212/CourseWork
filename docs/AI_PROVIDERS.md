@@ -18,7 +18,7 @@
 | `AiTestMapper` | `Services/Ai/AiTestMapper.cs` | Валідує питання тими ж правилами, що й ручний конструктор; биті — відкидає (лічильник `SkippedQuestions`) |
 | `AiHttp` | `Services/Ai/AiHttp.cs` | Спільна відправка HTTP + мапінг статусів у `AiErrorKind` (401/403 → Unauthorized, 429 → RateLimited, 5xx → ServerError). Ключі в повідомлення не потрапляють |
 | Налаштування UI | `ViewModels/AiSettingsViewModel.cs`, `Views/AiSettingsWindow.xaml` | Вибір провайдера, адреса/модель/ключ/таймаут, кнопка «Перевірити з'єднання» |
-| Рядки UI | `Services/Strings.cs` | `Ai_Provider_*`, `Ai_Err_*`, `Err_Ai_*` (UA/RU/EN) |
+| Рядки UI | `Languages/UA.xaml`, `Languages/EN.xaml` | `Ai_Provider_*`, `Ai_Err_*`, `Err_Ai_*` |
 
 Потік запиту:
 
@@ -130,10 +130,10 @@ sc.AddSingleton<IAiProvider, MyProvider>();
 - додайте типові адресу/модель у `AiProviderDefaults.For(...)`;
 - якщо ключ обов'язковий — розширте перевірку: `if (kind is AiProviderKind.Anthropic or AiProviderKind.Gemini or AiProviderKind.MyProvider && key.Length == 0) ...`.
 
-**Крок 5 — рядки локалізації.** `Services/Strings.cs`:
+**Крок 5 — рядки локалізації.** Додайте ключ у всі словники `Languages/*.xaml`:
 
-```csharp
-["Ai_Provider_MyProvider"] = ("Моя модель (опис)", "Моя модель (описание)", "My provider (description)"),
+```xml
+<sys:String x:Key="Ai_Provider_MyProvider" xml:space="preserve">Моя модель (опис)</sys:String>
 ```
 
 **Крок 6 — перевірка:**

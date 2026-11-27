@@ -1,0 +1,426 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- загальне -->
+    <sys:String x:Key="App_Title" xml:space="preserve">Система тестування</sys:String>
+    <sys:String x:Key="Win_Teacher" xml:space="preserve">Робоче місце викладача</sys:String>
+    <sys:String x:Key="Win_Student" xml:space="preserve">Кабінет учня</sys:String>
+    <sys:String x:Key="Role_Admin" xml:space="preserve">Адміністратор</sys:String>
+    <sys:String x:Key="Role_Teacher" xml:space="preserve">Викладач</sys:String>
+    <sys:String x:Key="Role_Student" xml:space="preserve">Студент</sys:String>
+    <sys:String x:Key="Yes" xml:space="preserve">Так</sys:String>
+    <sys:String x:Key="No" xml:space="preserve">Ні</sys:String>
+    <sys:String x:Key="Btn_Cancel" xml:space="preserve">Скасувати</sys:String>
+    <sys:String x:Key="Btn_Close" xml:space="preserve">Закрити</sys:String>
+    <sys:String x:Key="Btn_Logout" xml:space="preserve">Вийти</sys:String>
+    <sys:String x:Key="Btn_Edit" xml:space="preserve">Редагувати</sys:String>
+    <sys:String x:Key="Btn_Delete" xml:space="preserve">Видалити</sys:String>
+    <sys:String x:Key="Btn_Browse" xml:space="preserve">Огляд…</sys:String>
+    <sys:String x:Key="Theme_Light" xml:space="preserve">Світла</sys:String>
+    <sys:String x:Key="Theme_Dark" xml:space="preserve">Темна</sys:String>
+    <sys:String x:Key="Theme_Toggle" xml:space="preserve">Змінити тему</sys:String>
+    <sys:String x:Key="Lang_Label" xml:space="preserve">Мова</sys:String>
+    <sys:String x:Key="Hdr_OpenProfile" xml:space="preserve">Відкрити особистий кабінет</sys:String>
+    <sys:String x:Key="Hdr_Connected" xml:space="preserve">Підключено: {0}</sys:String>
+    <sys:String x:Key="Msg_ConfirmTitle" xml:space="preserve">Підтвердження</sys:String>
+    <sys:String x:Key="Msg_Saved" xml:space="preserve">Файл збережено.</sys:String>
+    <sys:String x:Key="Deleted_Test" xml:space="preserve">(тест видалено)</sys:String>
+    <sys:String x:Key="Unknown_Student" xml:space="preserve">(невідомо)</sys:String>
+    <sys:String x:Key="Lbl_Group" xml:space="preserve">Група:</sys:String>
+    <sys:String x:Key="Lbl_Groups" xml:space="preserve">Групи</sys:String>
+    <sys:String x:Key="Lbl_Test" xml:space="preserve">Тест:</sys:String>
+    <sys:String x:Key="Lbl_Category" xml:space="preserve">Категорія</sys:String>
+    <sys:String x:Key="Filter_AllGroups" xml:space="preserve">Усі групи</sys:String>
+    <sys:String x:Key="Filter_AllTests" xml:space="preserve">Усі тести</sys:String>
+    <sys:String x:Key="Filter_AllCategories" xml:space="preserve">Усі категорії</sys:String>
+    <sys:String x:Key="Filter_Status" xml:space="preserve">Статус:</sys:String>
+    <sys:String x:Key="Filter_AllStatuses" xml:space="preserve">Усі статуси</sys:String>
+    <sys:String x:Key="Btn_ResetFilters" xml:space="preserve">Скинути фільтри</sys:String>
+    <sys:String x:Key="Filter_NoMatches" xml:space="preserve">Нічого не знайдено за заданими умовами.</sys:String>
+    <sys:String x:Key="Msg_NoTestsYet" xml:space="preserve">Список тестів порожній.</sys:String>
+    <sys:String x:Key="Msg_NoLecturesYet" xml:space="preserve">Список лекцій порожній.</sys:String>
+
+    <!-- вхід / реєстрація -->
+    <sys:String x:Key="Login_Title" xml:space="preserve">Вхід</sys:String>
+    <sys:String x:Key="Register_Title" xml:space="preserve">Реєстрація студента</sys:String>
+    <sys:String x:Key="Btn_Login" xml:space="preserve">Увійти</sys:String>
+    <sys:String x:Key="Btn_Register" xml:space="preserve">Зареєструватися</sys:String>
+    <sys:String x:Key="Link_ToRegister" xml:space="preserve">Немає акаунта? Реєстрація студента</sys:String>
+    <sys:String x:Key="Link_ToLogin" xml:space="preserve">Вже є акаунт? Увійти</sys:String>
+    <sys:String x:Key="Login_DemoHint" xml:space="preserve">Демо: teacher / student1 / student2 / admin, пароль 1234. Пін-код тесту: 1234</sys:String>
+    <sys:String x:Key="Msg_EnterCredentials" xml:space="preserve">Введіть логін і пароль.</sys:String>
+    <sys:String x:Key="Field_Username" xml:space="preserve">Логін</sys:String>
+    <sys:String x:Key="Field_Password" xml:space="preserve">Пароль</sys:String>
+    <sys:String x:Key="Field_FullName" xml:space="preserve">ПІБ</sys:String>
+    <sys:String x:Key="Field_Email" xml:space="preserve">Email</sys:String>
+    <sys:String x:Key="Field_Group" xml:space="preserve">Навчальна група</sys:String>
+
+    <!-- вкладки -->
+    <sys:String x:Key="Tab_Builder" xml:space="preserve">Конструктор тестів і банк питань</sys:String>
+    <sys:String x:Key="Tab_Review" xml:space="preserve">Перевірка робіт</sys:String>
+    <sys:String x:Key="Tab_Analytics" xml:space="preserve">Журнал і аналітика</sys:String>
+    <sys:String x:Key="Tab_Profile" xml:space="preserve">Профіль</sys:String>
+    <sys:String x:Key="Tab_Groups" xml:space="preserve">Групи</sys:String>
+    <sys:String x:Key="Tab_Categories" xml:space="preserve">Категорії</sys:String>
+    <sys:String x:Key="Cat_Title" xml:space="preserve">Категорії тестів і лекцій</sys:String>
+    <sys:String x:Key="Cat_Hint" xml:space="preserve">Категорії допомагають групувати тести й лекції та швидко фільтрувати їх.</sys:String>
+    <sys:String x:Key="Cat_NameLabel" xml:space="preserve">Назва нової категорії:</sys:String>
+    <sys:String x:Key="Btn_AddCategory" xml:space="preserve">Додати категорію</sys:String>
+    <sys:String x:Key="Msg_SelectCategory" xml:space="preserve">Виберіть категорію в таблиці.</sys:String>
+    <sys:String x:Key="Msg_ConfirmDeleteCategory" xml:space="preserve">Видалити категорію «{0}»?</sys:String>
+    <sys:String x:Key="Err_CategoryNameRequired" xml:space="preserve">Введіть назву категорії.</sys:String>
+    <sys:String x:Key="Err_CategoryNameTaken" xml:space="preserve">Категорія з такою назвою вже існує.</sys:String>
+    <sys:String x:Key="Err_CategoryInUse" xml:space="preserve">Не можна видалити категорію: вона використовується в тестах або лекціях.</sys:String>
+    <sys:String x:Key="Col_Category" xml:space="preserve">Категорія</sys:String>
+    <sys:String x:Key="Col_Usage" xml:space="preserve">Використань</sys:String>
+    <sys:String x:Key="Grp_Title" xml:space="preserve">Групи студентів</sys:String>
+    <sys:String x:Key="Grp_NameLabel" xml:space="preserve">Назва нової групи:</sys:String>
+    <sys:String x:Key="Btn_AddGroup" xml:space="preserve">Додати групу</sys:String>
+    <sys:String x:Key="Msg_SelectGroup" xml:space="preserve">Виберіть групу в таблиці.</sys:String>
+    <sys:String x:Key="Msg_ConfirmDeleteGroup" xml:space="preserve">Видалити групу «{0}»?</sys:String>
+    <sys:String x:Key="Err_GroupNameRequired" xml:space="preserve">Введіть назву групи.</sys:String>
+    <sys:String x:Key="Err_GroupNameTaken" xml:space="preserve">Група з такою назвою вже існує.</sys:String>
+    <sys:String x:Key="Err_GroupHasStudents" xml:space="preserve">Не можна видалити групу: до неї належать студенти. Спочатку переведіть їх до інших груп.</sys:String>
+    <sys:String x:Key="Tab_Available" xml:space="preserve">Доступні тести</sys:String>
+    <sys:String x:Key="Tab_MyResults" xml:space="preserve">Мої результати та помилки</sys:String>
+
+    <!-- конструктор: список тестів -->
+    <sys:String x:Key="Btn_CreateTest" xml:space="preserve">Створити тест</sys:String>
+    <sys:String x:Key="Msg_SelectTest" xml:space="preserve">Виберіть тест у списку.</sys:String>
+    <sys:String x:Key="Msg_ConfirmDelete" xml:space="preserve">Видалити тест «{0}»?</sys:String>
+    <sys:String x:Key="Err_Forbidden" xml:space="preserve">Недостатньо прав: ви можете керувати лише власними тестами.</sys:String>
+    <sys:String x:Key="Meta_AllGroups" xml:space="preserve">усі групи</sys:String>
+    <sys:String x:Key="Meta_MaxAttempts" xml:space="preserve">Спроб: {0}</sys:String>
+    <sys:String x:Key="Meta_UnlimitedAttempts" xml:space="preserve">Спроби не обмежені</sys:String>
+
+    <!-- редактор тесту -->
+    <sys:String x:Key="Editor_NewTest" xml:space="preserve">Новий тест</sys:String>
+    <sys:String x:Key="Editor_EditTest" xml:space="preserve">Редагування: {0}</sys:String>
+    <sys:String x:Key="Lbl_TestSettings" xml:space="preserve">Налаштування тесту</sys:String>
+    <sys:String x:Key="Lbl_TestTitle" xml:space="preserve">Назва тесту:</sys:String>
+    <sys:String x:Key="Lbl_Description" xml:space="preserve">Опис:</sys:String>
+    <sys:String x:Key="Lbl_TimeLimit" xml:space="preserve">Ліміт часу, хв</sys:String>
+    <sys:String x:Key="Lbl_PassPercent" xml:space="preserve">Прохідний бал, %</sys:String>
+    <sys:String x:Key="Lbl_MaxAttempts" xml:space="preserve">Спроб</sys:String>
+    <sys:String x:Key="Hint_Zero" xml:space="preserve">0 = без обмежень (час / кількість спроб).</sys:String>
+    <sys:String x:Key="Chk_RandomQuestions" xml:space="preserve">Перемішувати питання</sys:String>
+    <sys:String x:Key="Chk_RandomAnswers" xml:space="preserve">Перемішувати варіанти відповідей</sys:String>
+    <sys:String x:Key="Chk_ShowExplanations" xml:space="preserve">Показувати студенту правильні відповіді та пояснення</sys:String>
+    <sys:String x:Key="Lbl_AccessCode" xml:space="preserve">Пін-код доступу (необов'язково):</sys:String>
+    <sys:String x:Key="Lbl_AssignedGroups" xml:space="preserve">Призначити групам:</sys:String>
+    <sys:String x:Key="Hint_Groups" xml:space="preserve">Нічого не вибрано — тест доступний усім студентам.</sys:String>
+    <sys:String x:Key="Lbl_QuestionsList" xml:space="preserve">Питання тесту</sys:String>
+    <sys:String x:Key="Lbl_QuestionEditor" xml:space="preserve">Редактор питання</sys:String>
+    <sys:String x:Key="Lbl_QuestionType" xml:space="preserve">Тип питання:</sys:String>
+    <sys:String x:Key="Lbl_TextEvaluation" xml:space="preserve">Перевірка текстової відповіді:</sys:String>
+    <sys:String x:Key="Lbl_QuestionText" xml:space="preserve">Текст питання:</sys:String>
+    <sys:String x:Key="Lbl_MaxScore" xml:space="preserve">Макс. бал</sys:String>
+    <sys:String x:Key="Lbl_Media" xml:space="preserve">Зображення до питання</sys:String>
+    <sys:String x:Key="Lbl_Explanation" xml:space="preserve">Пояснення до відповіді:</sys:String>
+    <sys:String x:Key="QType_SingleChoice" xml:space="preserve">Один варіант (RadioButton)</sys:String>
+    <sys:String x:Key="QType_MultipleChoice" xml:space="preserve">Кілька варіантів (CheckBox)</sys:String>
+    <sys:String x:Key="QType_TextAnswer" xml:space="preserve">Текстова відповідь</sys:String>
+    <sys:String x:Key="QType_Matching" xml:space="preserve">Відповідність (пари)</sys:String>
+    <sys:String x:Key="QType_Sequence" xml:space="preserve">Послідовність</sys:String>
+    <sys:String x:Key="QType_FileUpload" xml:space="preserve">Завантаження файлу</sys:String>
+    <sys:String x:Key="TEval_AutoExactMatch" xml:space="preserve">Автоматично: точний збіг</sys:String>
+    <sys:String x:Key="TEval_AutoContains" xml:space="preserve">Автоматично: містить фразу</sys:String>
+    <sys:String x:Key="TEval_ManualTeacherReview" xml:space="preserve">Ручна перевірка викладачем</sys:String>
+    <sys:String x:Key="AnsHint_SingleChoice" xml:space="preserve">Варіанти відповіді: позначте ОДИН правильний (порожні ігноруються).</sys:String>
+    <sys:String x:Key="AnsHint_MultipleChoice" xml:space="preserve">Варіанти відповіді: позначте ВСІ правильні (порожні ігноруються).</sys:String>
+    <sys:String x:Key="AnsHint_TextAnswer" xml:space="preserve">Припустимі відповіді (кожен рядок — окремий правильний варіант).</sys:String>
+    <sys:String x:Key="AnsHint_Matching" xml:space="preserve">Пари: ліворуч — елемент, праворуч — відповідне йому значення.</sys:String>
+    <sys:String x:Key="AnsHint_Sequence" xml:space="preserve">Елементи у ПРАВИЛЬНОМУ порядку (зверху вниз). Студент побачить їх перемішаними.</sys:String>
+    <sys:String x:Key="Btn_AddNew" xml:space="preserve">Додати як нове</sys:String>
+    <sys:String x:Key="Btn_UpdateSelected" xml:space="preserve">Оновити вибране</sys:String>
+    <sys:String x:Key="Btn_RemoveSelected" xml:space="preserve">Видалити вибране</sys:String>
+    <sys:String x:Key="Btn_ClearForm" xml:space="preserve">Очистити форму</sys:String>
+    <sys:String x:Key="Btn_SaveTest" xml:space="preserve">Зберегти тест</sys:String>
+    <sys:String x:Key="Err_EnterQuestion" xml:space="preserve">Введіть текст питання.</sys:String>
+    <sys:String x:Key="Err_MinTwoAnswers" xml:space="preserve">Потрібно щонайменше 2 варіанти.</sys:String>
+    <sys:String x:Key="Err_MarkCorrect" xml:space="preserve">Позначте хоча б одну правильну відповідь.</sys:String>
+    <sys:String x:Key="Err_Q_OneCorrect" xml:space="preserve">Для одиночного вибору потрібна рівно одна правильна відповідь.</sys:String>
+    <sys:String x:Key="Err_Q_NeedAccepted" xml:space="preserve">Вкажіть хоча б одну припустиму відповідь.</sys:String>
+    <sys:String x:Key="Err_Q_Pairs" xml:space="preserve">Потрібно щонайменше 2 пари, обидві частини кожної пари мають бути заповнені.</sys:String>
+    <sys:String x:Key="Err_Q_PairsUnique" xml:space="preserve">Праві частини пар мають бути унікальними.</sys:String>
+    <sys:String x:Key="Err_Q_Score" xml:space="preserve">Максимальний бал має бути числом більше 0.</sys:String>
+    <sys:String x:Key="Err_EnterTitle" xml:space="preserve">Введіть назву тесту.</sys:String>
+    <sys:String x:Key="Err_NeedQuestion" xml:space="preserve">Додайте хоча б одне питання.</sys:String>
+    <sys:String x:Key="Err_SelectQuestionFirst" xml:space="preserve">Спочатку виберіть питання у списку.</sys:String>
+    <sys:String x:Key="Err_T_Time" xml:space="preserve">Ліміт часу — ціле число хвилин від 0 до 600.</sys:String>
+    <sys:String x:Key="Err_T_Pass" xml:space="preserve">Прохідний бал — число від 0 до 100.</sys:String>
+    <sys:String x:Key="Err_T_Attempts" xml:space="preserve">Кількість спроб — ціле число від 0 до 100.</sys:String>
+
+    <!-- перевірка робіт -->
+    <sys:String x:Key="Msg_NothingToReview" xml:space="preserve">Робіт, що очікують перевірки, немає.</sys:String>
+    <sys:String x:Key="Hint_SelectWork" xml:space="preserve">Виберіть роботу зі списку ліворуч.</sys:String>
+    <sys:String x:Key="Lbl_StudentAnswer" xml:space="preserve">Відповідь студента:</sys:String>
+    <sys:String x:Key="Lbl_Reference" xml:space="preserve">Орієнтир для перевірки</sys:String>
+    <sys:String x:Key="Btn_OpenFile" xml:space="preserve">Відкрити файл</sys:String>
+    <sys:String x:Key="Lbl_Score" xml:space="preserve">Бал:</sys:String>
+    <sys:String x:Key="Lbl_OutOf" xml:space="preserve">з {0:0.##}</sys:String>
+    <sys:String x:Key="Lbl_TeacherNote" xml:space="preserve">Примітка викладача</sys:String>
+    <sys:String x:Key="Lbl_TeacherComment" xml:space="preserve">Коментар викладача</sys:String>
+    <sys:String x:Key="Btn_CompleteReview" xml:space="preserve">Завершити перевірку</sys:String>
+    <sys:String x:Key="Msg_ReviewSaved" xml:space="preserve">Перевірку збережено. Роботу переведено у статус «Завершено».</sys:String>
+    <sys:String x:Key="Err_ScoreRange" xml:space="preserve">Бал має бути числом від 0 до {0:0.##}.</sys:String>
+    <sys:String x:Key="Err_FileOpen" xml:space="preserve">Не вдалося відкрити файл.</sys:String>
+
+    <!-- журнал і аналітика -->
+    <sys:String x:Key="Btn_ExportExcel" xml:space="preserve">Експорт в Excel</sys:String>
+    <sys:String x:Key="Btn_ExportCsv" xml:space="preserve">Експорт в CSV</sys:String>
+    <sys:String x:Key="Btn_Report" xml:space="preserve">Сформувати звіт (PDF)</sys:String>
+    <sys:String x:Key="Msg_NothingToExport" xml:space="preserve">Немає даних для експорту.</sys:String>
+    <sys:String x:Key="Err_ExportFailed" xml:space="preserve">Не вдалося зберегти файл.</sys:String>
+    <sys:String x:Key="Hdr_HardQuestions" xml:space="preserve">Складність питань</sys:String>
+    <sys:String x:Key="Hint_HardQuestions" xml:space="preserve">Червоним виділено питання, на які неповністю відповідають у 50% і більше спроб.</sys:String>
+    <sys:String x:Key="Col_Student" xml:space="preserve">Студент</sys:String>
+    <sys:String x:Key="Col_Students" xml:space="preserve">Студентів</sys:String>
+    <sys:String x:Key="Col_Group" xml:space="preserve">Група</sys:String>
+    <sys:String x:Key="Col_Test" xml:space="preserve">Тест</sys:String>
+    <sys:String x:Key="Col_Points" xml:space="preserve">Бали</sys:String>
+    <sys:String x:Key="Col_Percent" xml:space="preserve">%</sys:String>
+    <sys:String x:Key="Col_Passed" xml:space="preserve">Складено</sys:String>
+    <sys:String x:Key="Col_Status" xml:space="preserve">Статус</sys:String>
+    <sys:String x:Key="Col_Date" xml:space="preserve">Дата</sys:String>
+    <sys:String x:Key="Col_Violations" xml:space="preserve">Порушення</sys:String>
+    <sys:String x:Key="Col_Question" xml:space="preserve">Питання</sys:String>
+    <sys:String x:Key="Col_Attempts" xml:space="preserve">Спроб</sys:String>
+    <sys:String x:Key="Col_WrongRate" xml:space="preserve">Помилок, %</sys:String>
+    <sys:String x:Key="Col_AvgPercent" xml:space="preserve">Сер., %</sys:String>
+    <sys:String x:Key="Col_PassRate" xml:space="preserve">Склали, %</sys:String>
+    <sys:String x:Key="Status_InProgress" xml:space="preserve">Виконується</sys:String>
+    <sys:String x:Key="Status_PendingTeacherReview" xml:space="preserve">На перевірці у викладача</sys:String>
+    <sys:String x:Key="Status_Completed" xml:space="preserve">Завершено</sys:String>
+    <sys:String x:Key="Status_Expired" xml:space="preserve">Час вичерпано</sys:String>
+    <sys:String x:Key="Report_Title" xml:space="preserve">Звіт про успішність</sys:String>
+    <sys:String x:Key="Report_Generated" xml:space="preserve">Сформовано</sys:String>
+    <sys:String x:Key="Report_HardQuestions" xml:space="preserve">Найскладніші питання</sys:String>
+
+    <!-- доступні тести -->
+    <sys:String x:Key="Msg_NoTests" xml:space="preserve">Для вас поки немає доступних тестів.</sys:String>
+    <sys:String x:Key="Btn_Start" xml:space="preserve">Пройти тест</sys:String>
+    <sys:String x:Key="Card_Time" xml:space="preserve">Час: {0} хв</sys:String>
+    <sys:String x:Key="Card_NoLimit" xml:space="preserve">Без обмеження часу</sys:String>
+    <sys:String x:Key="Card_Rules" xml:space="preserve">Прохідний бал: {0:0.#}% · питань: {1}</sys:String>
+    <sys:String x:Key="Card_Attempts" xml:space="preserve">Спроби: {0} з {1}</sys:String>
+    <sys:String x:Key="Card_AttemptsUnlimited" xml:space="preserve">Спроб використано: {0} (без обмежень)</sys:String>
+    <sys:String x:Key="Card_Protected" xml:space="preserve">Потрібен пін-код</sys:String>
+    <sys:String x:Key="Dlg_AccessCode" xml:space="preserve">Доступ до тесту</sys:String>
+    <sys:String x:Key="Dlg_EnterCode" xml:space="preserve">Цей тест захищено. Введіть пін-код:</sys:String>
+    <sys:String x:Key="StartErr_NotAssigned" xml:space="preserve">Цей тест не призначено вашій групі.</sys:String>
+    <sys:String x:Key="StartErr_NoAttemptsLeft" xml:space="preserve">Ви вичерпали всі спроби.</sys:String>
+    <sys:String x:Key="StartErr_WrongAccessCode" xml:space="preserve">Невірний пін-код.</sys:String>
+    <sys:String x:Key="StartErr_NoQuestions" xml:space="preserve">У тесті немає питань.</sys:String>
+    <sys:String x:Key="StartErr_TestNotFound" xml:space="preserve">Тест не знайдено.</sys:String>
+
+    <!-- проходження тесту -->
+    <sys:String x:Key="Run_Navigation" xml:space="preserve">Питання</sys:String>
+    <sys:String x:Key="Run_Prev" xml:space="preserve">← Назад</sys:String>
+    <sys:String x:Key="Run_Next" xml:space="preserve">Далі →</sys:String>
+    <sys:String x:Key="Run_Submit" xml:space="preserve">Здати тест</sys:String>
+    <sys:String x:Key="Run_QuestionOf" xml:space="preserve">Питання {0} з {1} · {2:0.##} б.</sys:String>
+    <sys:String x:Key="Run_Answered" xml:space="preserve">Відповідей: {0} з {1}</sys:String>
+    <sys:String x:Key="Run_Violations" xml:space="preserve">Порушень: {0}/{1}</sys:String>
+    <sys:String x:Key="Run_ViolationFocus" xml:space="preserve">Увага! Вікно тесту втратило фокус ({0} з {1}). Після {1} порушень тест буде здано автоматично.</sys:String>
+    <sys:String x:Key="Run_ViolationMinimized" xml:space="preserve">Увага! Вікно теста згорнуто ({0} з {1}). Після {1} порушень тест буде здано автоматично.</sys:String>
+    <sys:String x:Key="Run_LimitReached" xml:space="preserve">Досягнуто ліміт порушень — тест здано автоматично.</sys:String>
+    <sys:String x:Key="Run_TimeWarning" xml:space="preserve">Залишилась менше ніж хвилина!</sys:String>
+    <sys:String x:Key="Run_ConfirmSubmit" xml:space="preserve">Здати тест?</sys:String>
+    <sys:String x:Key="Run_ConfirmSubmitUnanswered" xml:space="preserve">Без відповіді залишилось питань: {0}. Здати тест?</sys:String>
+    <sys:String x:Key="Run_ConfirmLeave" xml:space="preserve">Вихід призведе до здачі тесту з поточними відповідями. Вийти?</sys:String>
+    <sys:String x:Key="Run_Done" xml:space="preserve">Тест завершено</sys:String>
+    <sys:String x:Key="Run_TimeUp" xml:space="preserve">Час вичерпано</sys:String>
+    <sys:String x:Key="Run_Passed" xml:space="preserve">Результат: {0:0.##} з {1:0.##} балів ({2:0.#}%). Тест складено!</sys:String>
+    <sys:String x:Key="Run_Failed" xml:space="preserve">Результат: {0:0.##} з {1:0.##} балів ({2:0.#}%). Тест не складено.</sys:String>
+    <sys:String x:Key="Run_Pending" xml:space="preserve">Попередній результат: {0:0.##} з {1:0.##} балів. Частину відповідей перевірить викладач — підсумок з'явиться у розділі «Мої результати».</sys:String>
+    <sys:String x:Key="Hint_SingleChoice" xml:space="preserve">Виберіть один варіант.</sys:String>
+    <sys:String x:Key="Hint_MultipleChoice" xml:space="preserve">Виберіть усі правильні варіанти.</sys:String>
+    <sys:String x:Key="Hint_TextAnswer" xml:space="preserve">Введіть відповідь.</sys:String>
+    <sys:String x:Key="Hint_Matching" xml:space="preserve">Для кожного елемента виберіть відповідне значення.</sys:String>
+    <sys:String x:Key="Hint_Sequence" xml:space="preserve">Розташуйте елементи у правильному порядку кнопками ▲ ▼.</sys:String>
+    <sys:String x:Key="Hint_FileUpload" xml:space="preserve">Прикріпіть файл з відповіддю (до 10 МБ).</sys:String>
+    <sys:String x:Key="Hint_MoveUp" xml:space="preserve">Вгору</sys:String>
+    <sys:String x:Key="Hint_MoveDown" xml:space="preserve">Вниз</sys:String>
+    <sys:String x:Key="Btn_ChooseFile" xml:space="preserve">Вибрати файл…</sys:String>
+    <sys:String x:Key="Btn_RemoveFile" xml:space="preserve">Прибрати</sys:String>
+    <sys:String x:Key="Lbl_NoFile" xml:space="preserve">Файл не вибрано</sys:String>
+    <sys:String x:Key="Err_FileType" xml:space="preserve">Цей тип файлу заборонено. Дозволені документи, зображення, архіви та вихідний код.</sys:String>
+    <sys:String x:Key="Err_FileTooBig" xml:space="preserve">Файл завеликий (максимум 10 МБ).</sys:String>
+    <sys:String x:Key="Err_FileCopy" xml:space="preserve">Не вдалося зберегти файл.</sys:String>
+
+    <!-- результати / розбір -->
+    <sys:String x:Key="Btn_ViewDetails" xml:space="preserve">Розбір та помилки</sys:String>
+    <sys:String x:Key="Btn_DownloadCertificate" xml:space="preserve">Завантажити PDF-сертифікат</sys:String>
+    <sys:String x:Key="Msg_SelectResult" xml:space="preserve">Виберіть результат у таблиці.</sys:String>
+    <sys:String x:Key="Msg_NoCertificate" xml:space="preserve">Сертифікат доступний лише для успішно зданих і перевірених тестів.</sys:String>
+    <sys:String x:Key="Details_Title" xml:space="preserve">Розбір: {0}</sys:String>
+    <sys:String x:Key="Details_Summary" xml:space="preserve">Бали: {0:0.##} з {1:0.##} ({2:0.#}%) · статус: {3}</sys:String>
+    <sys:String x:Key="Details_Score" xml:space="preserve">Бал: {0:0.##} з {1:0.##}</sys:String>
+    <sys:String x:Key="Details_AwaitingReview" xml:space="preserve">Очікує перевірки викладачем</sys:String>
+    <sys:String x:Key="Details_Hidden" xml:space="preserve">Викладач приховав правильні відповіді та пояснення до цього тесту.</sys:String>
+    <sys:String x:Key="Lbl_YourAnswer" xml:space="preserve">Відповідь:</sys:String>
+    <sys:String x:Key="Lbl_CorrectAnswer" xml:space="preserve">Правильна відповідь:</sys:String>
+    <sys:String x:Key="Lbl_NoAnswer" xml:space="preserve">— немає відповіді —</sys:String>
+    <sys:String x:Key="Cert_Title" xml:space="preserve">СЕРТИФІКАТ</sys:String>
+    <sys:String x:Key="Cert_Awarded" xml:space="preserve">Цей сертифікат підтверджує, що</sys:String>
+    <sys:String x:Key="Cert_ForPassing" xml:space="preserve">успішно склав(ла) тест</sys:String>
+    <sys:String x:Key="Cert_Result" xml:space="preserve">Результат</sys:String>
+    <sys:String x:Key="Cert_Date" xml:space="preserve">Дата</sys:String>
+
+    <!-- особистий кабінет -->
+    <sys:String x:Key="Prof_Card" xml:space="preserve">Картка профілю</sys:String>
+    <sys:String x:Key="Prof_Registered" xml:space="preserve">Дата реєстрації</sys:String>
+    <sys:String x:Key="Btn_ChoosePhoto" xml:space="preserve">Вибрати фото</sys:String>
+    <sys:String x:Key="Btn_RemovePhoto" xml:space="preserve">Прибрати фото</sys:String>
+    <sys:String x:Key="Btn_SaveProfile" xml:space="preserve">Зберегти зміни</sys:String>
+    <sys:String x:Key="Msg_ProfileSaved" xml:space="preserve">Профіль збережено.</sys:String>
+    <sys:String x:Key="Prof_Security" xml:space="preserve">Безпека</sys:String>
+    <sys:String x:Key="Field_OldPassword" xml:space="preserve">Старий пароль</sys:String>
+    <sys:String x:Key="Field_NewPassword" xml:space="preserve">Новий пароль</sys:String>
+    <sys:String x:Key="Field_ConfirmPassword" xml:space="preserve">Підтвердження пароля</sys:String>
+    <sys:String x:Key="Btn_ChangePassword" xml:space="preserve">Змінити пароль</sys:String>
+    <sys:String x:Key="Msg_PasswordChanged" xml:space="preserve">Пароль успішно змінено.</sys:String>
+    <sys:String x:Key="Prof_Settings" xml:space="preserve">Системні налаштування</sys:String>
+    <sys:String x:Key="Prof_Stats" xml:space="preserve">Статистика</sys:String>
+    <sys:String x:Key="Prof_Progress" xml:space="preserve">Динаміка успішності</sys:String>
+    <sys:String x:Key="Prof_Certificates" xml:space="preserve">Мої сертифікати</sys:String>
+    <sys:String x:Key="Prof_GroupStats" xml:space="preserve">Статистика за групами</sys:String>
+    <sys:String x:Key="Stat_TestsCompleted" xml:space="preserve">Пройдено тестів</sys:String>
+    <sys:String x:Key="Stat_AvgScore" xml:space="preserve">Середній бал, %</sys:String>
+    <sys:String x:Key="Stat_Certificates" xml:space="preserve">Отримано сертифікатів</sys:String>
+    <sys:String x:Key="Stat_TestsCreated" xml:space="preserve">Створено тестів</sys:String>
+    <sys:String x:Key="Stat_WorksReviewed" xml:space="preserve">Перевірено робіт</sys:String>
+    <sys:String x:Key="Stat_PendingReview" xml:space="preserve">Очікують перевірки</sys:String>
+    <sys:String x:Key="Stat_AvgPerformance" xml:space="preserve">Середня успішність, %</sys:String>
+
+    <!-- лекції -->
+    <sys:String x:Key="Tab_Lectures" xml:space="preserve">Лекції</sys:String>
+    <sys:String x:Key="Tab_Ai" xml:space="preserve">✨ AI-помічник</sys:String>
+    <sys:String x:Key="Lect_New" xml:space="preserve">Нова лекція</sys:String>
+    <sys:String x:Key="Lect_Published" xml:space="preserve">Опубліковано</sys:String>
+    <sys:String x:Key="Lect_Draft" xml:space="preserve">Чернетка</sys:String>
+    <sys:String x:Key="Lect_ConfirmDelete" xml:space="preserve">Видалити лекцію «{0}»?</sys:String>
+    <sys:String x:Key="Lect_NewTitle" xml:space="preserve">Нова лекція</sys:String>
+    <sys:String x:Key="Lect_EditTitle" xml:space="preserve">Редагування лекції: {0}</sys:String>
+    <sys:String x:Key="Lect_FieldTitle" xml:space="preserve">Назва лекції:</sys:String>
+    <sys:String x:Key="Lect_FieldSummary" xml:space="preserve">Короткий опис:</sys:String>
+    <sys:String x:Key="Lect_PublishCheck" xml:space="preserve">Опубліковано (видно студентам)</sys:String>
+    <sys:String x:Key="Lect_RelatedTestLabel" xml:space="preserve">Тест за темою лекції:</sys:String>
+    <sys:String x:Key="Lect_NoRelatedTest" xml:space="preserve">— немає —</sys:String>
+    <sys:String x:Key="Lect_NoneSelected" xml:space="preserve">— без лекції —</sys:String>
+    <sys:String x:Key="Lect_Markdown" xml:space="preserve">Текст лекції (Markdown: # заголовки, - списки, **жирний**, `код`)</sys:String>
+    <sys:String x:Key="Lect_Preview" xml:space="preserve">Попередній перегляд</sys:String>
+    <sys:String x:Key="Lect_AiGenerate" xml:space="preserve">✨ Згенерувати текст за назвою</sys:String>
+    <sys:String x:Key="Lect_AiHint" xml:space="preserve">AI створить чернетку — перевірте та відредагуйте її перед збереженням.</sys:String>
+    <sys:String x:Key="Btn_SaveLecture" xml:space="preserve">Зберегти лекцію</sys:String>
+    <sys:String x:Key="Err_Lect_Title" xml:space="preserve">Введіть назву лекції.</sys:String>
+    <sys:String x:Key="Err_Lect_Content" xml:space="preserve">Введіть текст лекції.</sys:String>
+    <sys:String x:Key="Lect_Empty" xml:space="preserve">Для вашої групи ще немає опублікованих лекцій.</sys:String>
+    <sys:String x:Key="Lect_SelectToRead" xml:space="preserve">Виберіть лекцію зі списку.</sys:String>
+    <sys:String x:Key="Lect_By" xml:space="preserve">Автор: {0}</sys:String>
+    <sys:String x:Key="Lect_RelatedTest" xml:space="preserve">Рекомендований тест після лекції: {0}</sys:String>
+
+    <!-- AI-помічник -->
+    <sys:String x:Key="Ai_Title" xml:space="preserve">AI-помічник</sys:String>
+    <sys:String x:Key="Ai_Provider" xml:space="preserve">Провайдер: {0}</sys:String>
+    <sys:String x:Key="Ai_Settings" xml:space="preserve">⚙ Налаштування AI</sys:String>
+    <sys:String x:Key="Ai_MockWarning" xml:space="preserve">Демо-режим (Mock): відповіді шаблонні й не залежать від інтернету. Для реальної генерації підключіть провайдера в налаштуваннях.</sys:String>
+    <sys:String x:Key="Ai_Review" xml:space="preserve">Усе, що створив AI, відкривається в редакторі як чернетка: ви перевіряєте результат і лише потім зберігаєте його.</sys:String>
+    <sys:String x:Key="Ai_Working" xml:space="preserve">AI працює…</sys:String>
+    <sys:String x:Key="Ai_Cancelled" xml:space="preserve">Операцію скасовано.</sys:String>
+    <sys:String x:Key="Ai_TopicsCard" xml:space="preserve">1. Теми лекцій</sys:String>
+    <sys:String x:Key="Ai_Subject" xml:space="preserve">Предмет або напрям:</sys:String>
+    <sys:String x:Key="Ai_Count" xml:space="preserve">Кількість:</sys:String>
+    <sys:String x:Key="Ai_GenerateTopics" xml:space="preserve">✨ Запропонувати теми</sys:String>
+    <sys:String x:Key="Ai_LectureFromTopic" xml:space="preserve">✨ Створити лекцію за вибраною темою</sys:String>
+    <sys:String x:Key="Ai_LectureCard" xml:space="preserve">2. Лекція</sys:String>
+    <sys:String x:Key="Ai_TopicLabel" xml:space="preserve">Тема лекції:</sys:String>
+    <sys:String x:Key="Ai_GenerateLecture" xml:space="preserve">✨ Створити лекцію</sys:String>
+    <sys:String x:Key="Ai_TestCard" xml:space="preserve">3. Тест</sys:String>
+    <sys:String x:Key="Ai_TestTopic" xml:space="preserve">Тема тесту:</sys:String>
+    <sys:String x:Key="Ai_SourceLecture" xml:space="preserve">Спиратися на текст лекції (необов'язково):</sys:String>
+    <sys:String x:Key="Ai_QuestionCount" xml:space="preserve">Кількість питань:</sys:String>
+    <sys:String x:Key="Ai_QuestionTypes" xml:space="preserve">Типи питань:</sys:String>
+    <sys:String x:Key="Ai_GenerateTest" xml:space="preserve">✨ Створити тест</sys:String>
+    <sys:String x:Key="Ai_TopicsReady" xml:space="preserve">Запропоновано тем: {0}.</sys:String>
+    <sys:String x:Key="Ai_LectureReady" xml:space="preserve">Чернетку створено — перевірте текст і збережіть.</sys:String>
+    <sys:String x:Key="Ai_LectureSaved" xml:space="preserve">Лекцію збережено.</sys:String>
+    <sys:String x:Key="Ai_TestReady" xml:space="preserve">Створено питань: {0}; відхилено некоректних: {1}. Перевірте тест в редакторі.</sys:String>
+    <sys:String x:Key="Ai_ConfirmOverwrite" xml:space="preserve">Поточний текст буде замінено. Продовжити?</sys:String>
+    <sys:String x:Key="Ai_NoTypes" xml:space="preserve">Оберіть хоча б один тип питань.</sys:String>
+    <sys:String x:Key="Ai_Err_Topic" xml:space="preserve">Вкажіть тему (текстове поле не має бути порожнім).</sys:String>
+    <sys:String x:Key="Ai_Err_NotConfigured" xml:space="preserve">AI не налаштовано: перевірте модель та API-ключ.</sys:String>
+    <sys:String x:Key="Ai_Err_Network" xml:space="preserve">Немає зв'язку з AI-сервісом.</sys:String>
+    <sys:String x:Key="Ai_Err_Unauthorized" xml:space="preserve">Ключ API недійсний або немає доступу.</sys:String>
+    <sys:String x:Key="Ai_Err_RateLimited" xml:space="preserve">Перевищено ліміт запитів. Спробуйте пізніше.</sys:String>
+    <sys:String x:Key="Ai_Err_ServerError" xml:space="preserve">Помилка на боці AI-сервісу. Спробуйте пізніше.</sys:String>
+    <sys:String x:Key="Ai_Err_InvalidResponse" xml:space="preserve">AI повернув відповідь у неочікуваному форматі. Спробуйте ще раз.</sys:String>
+    <sys:String x:Key="Ai_Err_Timeout" xml:space="preserve">Час очікування відповіді вичерпано.</sys:String>
+    <sys:String x:Key="Ai_SuggestGrades" xml:space="preserve">✨ AI: запропонувати оцінки</sys:String>
+    <sys:String x:Key="Ai_NoTextAnswers" xml:space="preserve">Немає текстових відповідей для перевірки AI (файли AI не читає).</sys:String>
+    <sys:String x:Key="Ai_GradesFilled" xml:space="preserve">Підказки підставлено. Перевірте бали й коментарі — рішення за вами.</sys:String>
+
+    <!-- налаштування AI -->
+    <sys:String x:Key="Ai_SettingsTitle" xml:space="preserve">Налаштування AI</sys:String>
+    <sys:String x:Key="Ai_HelpTitle" xml:space="preserve">Як підключити AI — інструкція</sys:String>
+    <sys:String x:Key="Ai_HelpSteps" xml:space="preserve">1. Виберіть провайдера: Mock — демо без ключа та інтернету; OpenAI-сумісний — OpenAI, OpenRouter або локальні Ollama / LM Studio (у розробці, можливі проблеми); Anthropic — Claude (у розробці, можливі проблеми); Gemini — Google.
+2. Адреса API та модель підставляються автоматично — за потреби змініть їх вручну. У поле адреси вписуйте лише базовий адрес (наприклад, https://generativelanguage.googleapis.com), без /v1beta/models/… .
+3. Вставте API-ключ. Де взяти: OpenAI — platform.openai.com/api-keys; Anthropic — console.anthropic.com; Gemini — aistudio.google.com/apikey (безкоштовно). Для Ollama / LM Studio ключ не потрібен.
+4. Натисніть «Перевірити зʼєднання» — має зʼявитись «Зʼєднання успішне (відповідь: OK)».
+5. Натисніть «Зберегти». Ключ зберігається зашифрованим на цьому ПК і нікуди не передається, крім обраного провайдера.</sys:String>
+    <sys:String x:Key="Ai_Privacy" xml:space="preserve">Увага: у зовнішнього провайдера (не Mock) передаються тексти лекцій і тестів та відповіді студентів — без імен. Не використовуйте його для конфіденційних матеріалів без дозволу закладу.</sys:String>
+    <sys:String x:Key="Ai_ProviderLabel" xml:space="preserve">Провайдер:</sys:String>
+    <sys:String x:Key="Ai_Provider_Mock" xml:space="preserve">Mock — демо без ключа</sys:String>
+    <sys:String x:Key="Ai_Provider_OpenAi" xml:space="preserve">OpenAI-сумісний (OpenAI, Ollama…) — у розробці</sys:String>
+    <sys:String x:Key="Ai_Provider_Anthropic" xml:space="preserve">Anthropic (Claude) — у розробці</sys:String>
+    <sys:String x:Key="Ai_ProviderExperimentalWarning" xml:space="preserve">Увага: цей провайдер перебуває в розробці й не перевірявся на реальному API — можливі проблеми в роботі.</sys:String>
+    <sys:String x:Key="Ai_Provider_Gemini" xml:space="preserve">Google Gemini</sys:String>
+    <sys:String x:Key="Ai_BaseUrl" xml:space="preserve">Адреса API (порожньо — типова):</sys:String>
+    <sys:String x:Key="Ai_Model" xml:space="preserve">Модель:</sys:String>
+    <sys:String x:Key="Ai_ApiKey" xml:space="preserve">API-ключ:</sys:String>
+    <sys:String x:Key="Ai_KeyStored" xml:space="preserve">Ключ збережено (зашифровано). Залиште поле порожнім, щоб не змінювати.</sys:String>
+    <sys:String x:Key="Ai_KeyNotSet" xml:space="preserve">Ключ не задано.</sys:String>
+    <sys:String x:Key="Ai_RemoveKey" xml:space="preserve">Видалити ключ</sys:String>
+    <sys:String x:Key="Ai_Timeout" xml:space="preserve">Таймаут запиту, с:</sys:String>
+    <sys:String x:Key="Ai_TestConnection" xml:space="preserve">Перевірити з'єднання</sys:String>
+    <sys:String x:Key="Ai_ConnectionOk" xml:space="preserve">З'єднання успішне (відповідь: {0}).</sys:String>
+    <sys:String x:Key="Btn_SaveSettings" xml:space="preserve">Зберегти</sys:String>
+    <sys:String x:Key="Err_Ai_Timeout" xml:space="preserve">Таймаут — ціле число від 5 до 300 секунд.</sys:String>
+    <sys:String x:Key="Err_Ai_Model" xml:space="preserve">Вкажіть модель.</sys:String>
+    <sys:String x:Key="Err_Ai_Url" xml:space="preserve">Некоректна адреса API (потрібна http:// або https://).</sys:String>
+    <sys:String x:Key="Err_Ai_Https" xml:space="preserve">Для віддалених серверів потрібен захищений HTTPS (http дозволено лише для localhost).</sys:String>
+    <sys:String x:Key="Err_Ai_Key" xml:space="preserve">Для цього провайдера потрібен API-ключ.</sys:String>
+
+    <!-- блокування сеансу -->
+    <sys:String x:Key="Lock_Title" xml:space="preserve">Сеанс заблоковано</sys:String>
+    <sys:String x:Key="Lock_Message" xml:space="preserve">Через {0} хв бездіяльності сеанс заблоковано. Введіть пароль, щоб продовжити.</sys:String>
+    <sys:String x:Key="Lock_Unlock" xml:space="preserve">Розблокувати</sys:String>
+    <sys:String x:Key="Lock_Logout" xml:space="preserve">Вийти з акаунта</sys:String>
+    <sys:String x:Key="Lock_WrongPassword" xml:space="preserve">Невірний пароль. Залишилось спроб: {0}.</sys:String>
+
+    <!-- коди результатів AuthResult (ключ = "Err_" + код) -->
+    <sys:String x:Key="Err_InvalidCredentials" xml:space="preserve">Невірний логін або пароль.</sys:String>
+    <sys:String x:Key="Err_UsernameRequired" xml:space="preserve">Введіть логін.</sys:String>
+    <sys:String x:Key="Err_UsernameTaken" xml:space="preserve">Цей логін уже зайнятий.</sys:String>
+    <sys:String x:Key="Err_FullNameRequired" xml:space="preserve">Введіть ПІБ.</sys:String>
+    <sys:String x:Key="Err_InvalidEmail" xml:space="preserve">Некоректний email.</sys:String>
+    <sys:String x:Key="Err_GroupRequired" xml:space="preserve">Виберіть навчальну групу.</sys:String>
+    <sys:String x:Key="Err_PasswordTooShort" xml:space="preserve">Пароль має містити щонайменше {0} символів.</sys:String>
+    <sys:String x:Key="Err_PasswordMismatch" xml:space="preserve">Новий пароль і підтвердження не збігаються.</sys:String>
+    <sys:String x:Key="Err_WrongOldPassword" xml:space="preserve">Старий пароль введено невірно.</sys:String>
+    <sys:String x:Key="Err_SamePassword" xml:space="preserve">Новий пароль збігається зі старим.</sys:String>
+    <sys:String x:Key="Err_UserNotFound" xml:space="preserve">Користувача не знайдено. Увійдіть знову.</sys:String>
+    <sys:String x:Key="Err_Conflict" xml:space="preserve">Дані змінилися в іншому місці. Повторіть спробу.</sys:String>
+    <sys:String x:Key="Grp_Students" xml:space="preserve">Студенти</sys:String>
+    <sys:String x:Key="Lbl_Search" xml:space="preserve">Пошук:</sys:String>
+    <sys:String x:Key="Lbl_NewGroup" xml:space="preserve">Перевести до групи:</sys:String>
+    <sys:String x:Key="Btn_MoveToGroup" xml:space="preserve">Змінити групу</sys:String>
+    <sys:String x:Key="Msg_SelectStudent" xml:space="preserve">Виберіть студента в таблиці.</sys:String>
+    <sys:String x:Key="Msg_GroupChanged" xml:space="preserve">Студента «{0}» переведено до групи «{1}».</sys:String>
+    <sys:String x:Key="Col_Login" xml:space="preserve">Логін</sys:String>
+    <sys:String x:Key="Col_Email" xml:space="preserve">Email</sys:String>
+    <sys:String x:Key="Err_AccessDenied" xml:space="preserve">Недостатньо прав для цієї дії.</sys:String>
+    <sys:String x:Key="Err_AvatarCopy" xml:space="preserve">Не вдалося зберегти фото профілю.</sys:String>
+</ResourceDictionary>
